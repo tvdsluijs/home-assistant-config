@@ -1,0 +1,3 @@
+nordpool_message_sent:
+    name: Nordpool Message Sent
+    initial: off

@@ -1,0 +1,18 @@
+mac_aan:
+  alias: Mac Aan
+  sequence:
+  - type: turn_on
+    device_id: 765f0025f4fd3e1b8670e71403c9b3a4
+    entity_id: switch.macbook_energy_schakelaar_switch
+    domain: switch
+  mode: single
+  icon: mdi:connection
+mac_uit:
+  alias: Mac Uit
+  sequence:
+  - type: turn_off
+    device_id: 765f0025f4fd3e1b8670e71403c9b3a4
+    entity_id: switch.macbook_energy_schakelaar_switch
+    domain: switch
+  mode: single
+  icon: mdi:connection
