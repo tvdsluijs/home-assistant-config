@@ -1,0 +1,8 @@
+# External IP
+- platform: rest
+  scan_interval: 3600
+  unique_id: external_ipv4
+  resource: https://api.ipify.org?format=json
+  method: GET
+  json_attributes:
+    - ip

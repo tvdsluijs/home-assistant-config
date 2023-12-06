@@ -69,32 +69,36 @@
     unit_of_measurement: '€/m³'
     state: >
         {% set water_btw = states('input_number.water_btw') | float %}
+        {% set water_belasting = states('input_number.water_belasting') | float %}
         {% set water_prijs = states('input_number.water_prijs') | float %}
-        {{ (water_prijs*water_btw) | round(2) }}
+        {{ ((water_prijs+water_belasting)*water_btw) | round(2) }}
 - sensor:
   - name: "Today's water Cost"
     unit_of_measurement: '€'
     state: >
         {% set water_consumption = states('sensor.water_per_dag') | float %}
         {% set water_btw = states('input_number.water_btw') | float %}
+        {% set water_belasting = states('input_number.water_belasting') | float %}
         {% set water_prijs = states('input_number.water_prijs') | float %}
-        {{ ((water_consumption * water_prijs)*water_btw) | round(2) }}
+        {{ ((water_consumption * (water_prijs+water_belasting))*water_btw) | round(2) }}
 - sensor:
   - name: "This month water Cost"
     unit_of_measurement: '€'
     state: >
         {% set water_consumption = states('sensor.water_per_maand') | float %}
         {% set water_btw = states('input_number.water_btw') | float %}
+        {% set water_belasting = states('input_number.water_belasting') | float %}
         {% set water_prijs = states('input_number.water_prijs') | float %}
-        {{ ((water_consumption * water_prijs)*water_btw) | round(2) }}
+        {{ ((water_consumption * (water_prijs+water_belasting))*water_btw) | round(2) }}
 - sensor:
   - name: "This year water Cost"
     unit_of_measurement: '€'
     state: >
         {% set water_consumption = states('sensor.water_per_jaar') | float %}
         {% set water_btw = states('input_number.water_btw') | float %}
+        {% set water_belasting = states('input_number.water_belasting') | float %}
         {% set water_prijs = states('input_number.water_prijs') | float %}
-        {{ ((water_consumption * water_prijs)*water_btw) | round(2) }}
+        {{ ((water_consumption * (water_prijs+water_belasting))*water_btw) | round(2) }}
 
 # Stroom prijs kosten
 - sensor:

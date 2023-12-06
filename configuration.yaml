@@ -80,14 +80,6 @@ camera:
   - platform: buienradar
 
 sensor:
-# External IP
-  - platform: rest
-    scan_interval: 3600
-    unique_id: external_ipv4
-    resource: https://api.ipify.org?format=json
-    method: GET
-    json_attributes:
-        - ip
 # Ambee Pollen Sensor
   - platform: rest
     scan_interval: 3600
@@ -180,4 +172,12 @@ sensor:
       - 'date_time_iso'
       - 'time_date'
       - 'time_utc'
-      - 'beat'      
+      - 'beat'
+# External IP
+  - platform: rest
+    scan_interval: 3600
+    unique_id: external_ipv4
+    resource: https://api.ipify.org?format=json
+    method: GET
+    json_attributes:
+        - ip

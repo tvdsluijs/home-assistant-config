@@ -1,0 +1,58 @@
+### airrohr Sensor
+# https://sensor.community/nl/sensors/airrohr/
+#
+# Must be added in sensor.yaml
+# resource must be your own IP Address of the sensor
+
+- platform: rest
+  unique_id: outside_air_quality_temp
+  name: outside_air_quality
+  json_attributes:
+    - sensordatavalues
+  resource: http://192.168.11.154/data.json
+  value_template: "OK"
+
+- platform: template
+  sensors:
+    pm_10:
+      icon_template: "mdi:weather-fog"
+      friendly_name: "PM 10"
+      unit_of_measurement: "μg/m³"
+      value_template: >-
+        {{ states.sensor.outside_air_quality.attributes.sensordatavalues[0].value }}
+
+- platform: template
+  sensors:
+    pm_25:
+      icon_template: "mdi:tree-outline"
+      friendly_name: "PM 2.5"
+      unit_of_measurement: "μg/m³"
+      value_template: >-
+        {{ states.sensor.outside_air_quality.attributes.sensordatavalues[1].value }}
+
+- platform: template
+  sensors:
+    pm_temperature:
+      icon_template: "mdi:thermometer"
+      friendly_name: "Temperature"
+      unit_of_measurement: "°C"
+      value_template: >-
+        {{ states.sensor.outside_air_quality.attributes.sensordatavalues[2].value | float | round(1) }}
+
+- platform: template
+  sensors:
+    pm_pressure:
+      icon_template: "mdi:gauge-low"
+      friendly_name: "Pressure"
+      unit_of_measurement: "bar"
+      value_template: >-
+        {{ states.sensor.outside_air_quality.attributes.sensordatavalues[3].value }}
+
+- platform: template
+  sensors:
+    pm_humidity:
+      icon_template: "mdi:water-percent"
+      friendly_name: "Humidity"
+      unit_of_measurement: "%"
+      value_template: >-
+        {{ states.sensor.outside_air_quality.attributes.sensordatavalues[4].value }}

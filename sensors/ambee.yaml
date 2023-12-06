@@ -1,0 +1,57 @@
+### Ambee Pollen
+
+# Must be added in sensor.yaml
+# https://api.ambeedata.com/latest/pollen/by-lat-lng?lat=LAT&lng=LONG
+# replace LAT, LONG and API-KEY with your values
+
+- platform: rest
+  scan_interval: 3600
+  resource: https://api.ambeedata.com/latest/pollen/by-lat-lng?lat=51.457072134927486&lng=3.850663722106284
+  name: "Ambee Pollen"
+  headers:
+    content-type: "application/json"
+    x-api-key: !secret ambeedata_api_key
+  json_attributes_path: "$.data.['Risk']"
+  json_attributes:
+    - tree_pollen
+    - grass_pollen
+    - weed_pollen
+
+- platform: template
+  sensors:
+    ambee_pollen_tree:
+      icon_template: "mdi:tree-outline"
+      friendly_name: "tree"
+      value_template: >-
+        {% set state = state_attr('sensor.ambee_pollen', 'tree_pollen') %}
+        {% if state == "Low" %}25
+        {% elif state == "Moderate"%}50
+        {% elif state == "High"%}75
+        {% elif state == "Very High"%}100
+        {% else %}0{% endif %}
+
+- platform: template
+  sensors:
+    ambee_pollen_weed:
+      icon_template: "mdi:nature"
+      friendly_name: "weed"
+      value_template: >-
+        {% set state = state_attr('sensor.ambee_pollen', 'weed_pollen') %}
+        {% if state == "Low" %}25
+        {% elif state == "Moderate"%}50
+        {% elif state == "High"%}75
+        {% elif state == "Very High"%}100
+        {% else %}0{% endif %}
+
+- platform: template
+  sensors:
+    ambee_pollen_grass:
+      icon_template: "mdi:grass"
+      friendly_name: "grass"
+      value_template: >-
+        {% set state = state_attr('sensor.ambee_pollen', 'grass_pollen') %}
+        {% if state == "Low" %}25
+        {% elif state == "Moderate"%}50
+        {% elif state == "High"%}75
+        {% elif state == "Very High"%}100
+        {% else %}0{% endif %}

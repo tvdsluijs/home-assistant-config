@@ -7,12 +7,14 @@
 !.gitignore
 !*.md
 !www/images/*
+!sensors
+!sensors/*
 !.storage/lovelace*
 !.storage/lovelace.*
 !.storage/lovelace_*
 
 # Ignore folders.
-.storage/*
+.storage
 .cloud
 .google.token
 blueprints

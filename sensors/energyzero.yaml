@@ -1,0 +1,66 @@
+### EnergyZero Gas Prijs Sensor
+
+- platform: rest
+  unique_id: energyzero_gas_prijs_per_dag_restapi
+  name: EnergyZero Gas prijs per dag
+  resource: https://api.energyzero.nl/v1/energyprices
+  scan_interval: 900
+  value_template: OK
+  params:
+    fromDate: >
+      {{(now().strftime('%Y-%m-%d')|as_datetime).isoformat()}}Z
+    tillDate: >
+      {{((now()+ timedelta(days=2)).strftime('%Y-%m-%d')|as_datetime).isoformat()}}Z
+    interval: 4
+    usageType: 3
+    inclBtw: false
+  json_attributes:
+    - Prices
+
+- platform: template
+  sensors:
+    huidige_gas_prijs:
+      icon_template: "mdi:gas-burner"
+      friendly_name: "Huidige gasprijs"
+      unit_of_measurement: "€/m³"
+      value_template: >-
+        {% set current_time = now().strftime('%Y-%m-%dT%H:00:00Z') %}
+        {% set price = state_attr('sensor.energyzero_gas_prijs_per_dag', 'Prices') | selectattr('readingDate','eq', current_time) | map(attribute='price') | first %}
+        {{ "{:,.3f}".format(price) }}
+
+
+- platform: template
+  sensors:
+    huidige_gas_prijs_all_in:
+      icon_template: "mdi:gas-burner"
+      friendly_name: "Huidige gas prijs all-in"
+      unit_of_measurement: "€/m³"
+      value_template: >-
+        {% set current_time = now().strftime('%Y-%m-%dT%H:00:00Z') %}
+        {% set price = state_attr('sensor.energyzero_gas_prijs_per_dag', 'Prices') | selectattr('readingDate','eq', current_time) | map(attribute='price') | first %}
+        {% set gas_btw = states('input_number.gas_btw') | float %}
+        {% set gas_energie_belasting = states('input_number.gas_energie_belasting') | float %}
+        {% set gas_energie_opslag = states('input_number.gas_energie_opslag') | float %}
+        {{ (( price+gas_energie_belasting+gas_energie_opslag) * gas_btw) | round(5) }}
+
+- platform: template
+  sensors:
+    gas_kosten_uur:
+      icon_template: "mdi:gas-burner"
+      friendly_name: "Gas kosten per uur"
+      unit_of_measurement: "€"
+      value_template: >-
+        {% set gas_consumption = states('sensor.gas_verbruik_per_uur') | float %}
+        {% set gas_price = states('sensor.huidige_gas_prijs_all_in') | float %}
+        {{ (gas_consumption * gas_price) | round(2) }}
+
+- platform: template
+  sensors:
+    gas_kosten_vandaag:
+      icon_template: "mdi:gas-burner"
+      friendly_name: "Gas kosten vandaag"
+      unit_of_measurement: "€"
+      value_template: >-
+        {% set gas_consumption = states('sensor.gas_verbruik_dagelijks') | float %}
+        {% set gas_price = states('sensor.huidige_gas_prijs_all_in') | float %}
+        {{ (gas_consumption * gas_price) | round(2) }}

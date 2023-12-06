@@ -1,0 +1,13 @@
+# Raspberry Pi Systeem Monitor Sensor
+- platform: systemmonitor
+  resources:
+    - type: disk_use_percent
+      arg: /config
+    - type: disk_use
+    - type: disk_free
+    - type: memory_use_percent
+    - type: memory_use
+    - type: memory_free
+    - type: processor_use
+    - type: processor_temperature
+    - type: last_boot
