@@ -1,20 +1,38 @@
+### Customize Configuration for Waste Collection Sensors
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This configuration customizes various waste collection sensors in Home Assistant by assigning 
+# specific entity pictures to each. These images visually represent the type of waste for each sensor, 
+# enhancing the user interface with intuitive icons.
+
+# Customization for the vegetable, fruit, and garden waste sensor
 sensor.afvalinfo_groente_fruit_en_tuinafval:
-  entity_picture: /local/images/gft-icon.png
+  entity_picture: /local/images/gft-icon.png  # Image representing GFT (Groente, Fruit, en Tuinafval)
 
+# Customization for the residual waste sensor
 sensor.afvalinfo_restafval:
-  entity_picture: /local/images/restafval-icon.png
+  entity_picture: /local/images/restafval-icon.png  # Image representing restafval (residual waste)
 
+# Customization for the plastic bags sensor
 sensor.afvalinfo_plastic_zakken:
-  entity_picture: /local/images/pmd-icon.png
+  entity_picture: /local/images/pmd-icon.png  # Image representing PMD (Plastic, Metal, Drink cartons)
 
+# Customization for the paper waste sensor
 sensor.afvalinfo_papier:
-  entity_picture: /local/images/papier-icon.png
+  entity_picture: /local/images/papier-icon.png  # Image representing papier (paper)
 
+# Customization for the textile bags sensor
 sensor.afvalinfo_textiel_zakken:
-  entity_picture: /local/images/textiel-icon.png
+  entity_picture: /local/images/textiel-icon.png  # Image representing textiel (textile)
 
+# Customization for the Christmas tree sensor
 sensor.afvalinfo_kerstboom:
-  entity_picture: /local/images/kerstboom-icon.png
+  entity_picture: /local/images/kerstboom-icon.png  # Image representing kerstboom (Christmas tree)
 
+# Customization for the branches waste sensor
 sensor.afvalinfo_takken:
-  entity_picture: /local/images/takken-icon.png
+  entity_picture: /local/images/takken-icon.png  # Image representing takken (branches)
+
+# End of configuration

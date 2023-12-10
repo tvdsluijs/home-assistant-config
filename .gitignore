@@ -6,13 +6,21 @@
 !*.yaml
 !.gitignore
 !*.md
-!www/images/*
-!sensors
-!sensors/*
-!.storage
-!.storage/lovelace*
-!.storage/lovelace.*
-!.storage/lovelace_*
+# !www/images/*
+# !sensors
+# !sensors/*
+# !binary_sensors
+# !binary_sensors/*
+# !automations
+# !automations/*
+# !camera
+# !camera/*
+# !input
+# !input/*
+# !utility_meter
+# !utility_meter/*
+# !*.md
+
 
 # Ignore folders.
 .storage/*
@@ -29,10 +37,19 @@ tts
 ssl
 www
 
-# Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
+# Ensure these (YAML) files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml
 secrets.yaml
 known_devices.yaml
+googleassistant_serviceaccount.json
+includes/googleassistant_serviceaccount.json
+.google.token
+.spotify-token-cache
+.sonoff.json
+.ip_authenticated.yaml
+google_calendars.yaml
+notify.yaml
+
 .HA_VERSION
 home-assistant.log
 home-assistant.log.1
@@ -40,3 +57,6 @@ home-assistant.log.fault
 home-assistant_v2.db
 home-assistant_v2.db-shm
 home-assistant_v2.db-wal
+
+# Ignore Python cache files 
+__pycache__/

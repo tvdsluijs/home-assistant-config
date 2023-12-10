@@ -1,13 +1,26 @@
-# Raspberry Pi Systeem Monitor Sensor
+# Raspberry Pi System Monitor Sensor Configuration
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This configuration sets up the systemmonitor platform in Home Assistant.
+# It is designed to monitor various system metrics of a Raspberry Pi, including disk usage, memory usage,
+# processor usage, temperature, and last boot time. This information is useful for keeping track of the
+# health and performance of the Raspberry Pi running Home Assistant.
+
 - platform: systemmonitor
   resources:
     - type: disk_use_percent
-      arg: /config
+      arg: /config  # Percentage of disk space used in the /config directory
     - type: disk_use
+      arg: /  # Total disk space used on the root partition
     - type: disk_free
-    - type: memory_use_percent
-    - type: memory_use
-    - type: memory_free
-    - type: processor_use
-    - type: processor_temperature
-    - type: last_boot
+      arg: /  # Free disk space on the root partition
+    - type: memory_use_percent  # Percentage of RAM used
+    - type: memory_use  # Total RAM used
+    - type: memory_free  # Free RAM available
+    - type: processor_use  # CPU usage as a percentage
+    - type: processor_temperature  # CPU temperature
+    - type: last_boot  # Time since the Raspberry Pi last booted
+
+# End of configuration

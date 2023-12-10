@@ -1,8 +1,18 @@
-# External IP
+# External IP Address Configuration
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This configuration sets up a REST sensor in Home Assistant to fetch the external IPv4 address.
+# The sensor queries the 'ipify' API every hour to retrieve the current external IP address of your network.
+# This is useful for monitoring changes in your external IP, especially if you have a dynamic IP address.
+
 - platform: rest
-  scan_interval: 3600
+  scan_interval: 3600  # The external IP is checked every hour
   unique_id: external_ipv4
-  resource: https://api.ipify.org?format=json
-  method: GET
+  resource: https://api.ipify.org?format=json  # ipify API endpoint for fetching the IP address
+  method: GET  # HTTP method used for the request
   json_attributes:
-    - ip
+    - ip  # The attribute 'ip' is extracted from the JSON response and stored in the sensor state
+
+# End of configuration

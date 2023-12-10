@@ -1,17 +1,24 @@
-### airrohr Sensor
-# https://sensor.community/nl/sensors/airrohr/
+### Airrohr Sensor Configuration
 #
-# Must be added in sensor.yaml
-# resource must be your own IP Address of the sensor
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+# Description: This configuration sets up sensors to monitor air quality using the Airrohr sensor data.
+# The sensors track various environmental parameters including particulate matter (PM 10 and PM 2.5),
+# temperature, pressure, and humidity. Data is fetched from the Airrohr sensor using its local IP address.
+# Note: Replace the resource IP with the IP address of your own Airrohr sensor.
 
+# REST sensor to fetch air quality data from the Airrohr sensor
 - platform: rest
-  unique_id: outside_air_quality_temp
+  unique_id: outside_air_quality
   name: outside_air_quality
+  resource: http://192.168.11.154/data.json  # Replace with your sensor's IP address  
   json_attributes:
     - sensordatavalues
-  resource: http://192.168.11.154/data.json
-  value_template: "OK"
+  value_template: "OK"  # Placeholder value as the actual data is in attributes
 
+# Template sensors to extract specific air quality data points
+
+# Sensor for Particulate Matter PM10
 - platform: template
   sensors:
     pm_10:
@@ -19,8 +26,9 @@
       friendly_name: "PM 10"
       unit_of_measurement: "μg/m³"
       value_template: >-
-        {{ states.sensor.outside_air_quality.attributes.sensordatavalues[0].value }}
+        {{ states.sensor.outside_air_quality_2.attributes.sensordatavalues[0].value }}
 
+# Sensor for Particulate Matter PM2.5
 - platform: template
   sensors:
     pm_25:
@@ -28,8 +36,9 @@
       friendly_name: "PM 2.5"
       unit_of_measurement: "μg/m³"
       value_template: >-
-        {{ states.sensor.outside_air_quality.attributes.sensordatavalues[1].value }}
+        {{ states.sensor.outside_air_quality_2.attributes.sensordatavalues[1].value }}
 
+# Sensor for Temperature
 - platform: template
   sensors:
     pm_temperature:
@@ -37,8 +46,9 @@
       friendly_name: "Temperature"
       unit_of_measurement: "°C"
       value_template: >-
-        {{ states.sensor.outside_air_quality.attributes.sensordatavalues[2].value | float | round(1) }}
+        {{ states.sensor.outside_air_quality_2.attributes.sensordatavalues[2].value | float | round(1) }}
 
+# Sensor for Pressure
 - platform: template
   sensors:
     pm_pressure:
@@ -46,8 +56,9 @@
       friendly_name: "Pressure"
       unit_of_measurement: "bar"
       value_template: >-
-        {{ states.sensor.outside_air_quality.attributes.sensordatavalues[3].value }}
+        {{ states.sensor.outside_air_quality_2.attributes.sensordatavalues[3].value }}
 
+# Sensor for Humidity
 - platform: template
   sensors:
     pm_humidity:
@@ -55,4 +66,6 @@
       friendly_name: "Humidity"
       unit_of_measurement: "%"
       value_template: >-
-        {{ states.sensor.outside_air_quality.attributes.sensordatavalues[4].value }}
+        {{ states.sensor.outside_air_quality_2.attributes.sensordatavalues[4].value }}
+
+# End of configuration

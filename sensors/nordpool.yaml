@@ -1,19 +1,30 @@
-# NordPool Stroom Prijzen Sensor
+# NordPool Electricity Prices Sensor Configuration
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+# Description: This configuration integrates the NordPool electricity pricing data into Home Assistant.
+# It tracks electricity prices for the Netherlands region, displaying current, next hour, and all-inclusive prices.
+# Template sensors are used to calculate electricity prices for various scenarios, including all-inclusive rates and hourly costs.
+
+# NordPool sensor to fetch electricity price data
 - platform: nordpool
-  region: "NL"
-  currency: "EUR"
-  VAT: False
-  precision: 5
-  price_in_cents: false
-  price_type: kWh
+  region: "NL"  # Region set to the Netherlands
+  currency: "EUR"  # Currency set to Euro
+  VAT: False  # Value-Added Tax not included
+  precision: 5  # Precision set to 5 decimal places
+  price_in_cents: false  # Prices are not in cents
+  price_type: kWh  # Price type set to per kilowatt-hour
 
+# Template sensors for NordPool data
 
+# Sensor to calculate the electricity price for the next hour
 - platform: template
   sensors:
     stroom_prijs_volgend_uur:
       icon_template: "mdi:home-lightning-bolt"
       friendly_name: "Volgend uur stroom prijs inkoop"
       unit_of_measurement: "€/kWh"
+      # Template to determine the electricity price for the next hour
       value_template: >-
         {% set data = namespace(prices=[]) %}
         {% set next_timestamp = now().timestamp() + 3600 %}
@@ -33,40 +44,45 @@
         {% else %}
           No data for today
         {% endif %}
-        
-        
+
+# Sensor to calculate the all-inclusive electricity price for the next hour
 - platform: template
   sensors:
     stroom_prijs_volgend_uur_all_in:
       icon_template: "mdi:home-lightning-bolt"
       friendly_name: "Volgend uur stroom prijs All-in"
       unit_of_measurement: "€/kWh"
+      # Template to determine the all-inclusive electricity price for the next hour
       value_template: >-
         {% set price = state_attr('sensor.volgend_uur_stroom_prijs_inkoop', 'price') %}
         {% set stroom_btw = states('input_number.stroom_btw') | float %}
         {% set stroom_energie_belasting = states('input_number.stroom_energie_belasting') | float %}
         {% set stroom_energie_opslag = states('input_number.stroom_energie_opslag') | float %}
         {{ (( price+stroom_energie_belasting+stroom_energie_opslag) * stroom_btw) | round(5) }}
-        
+
+# Sensor to calculate the current all-inclusive electricity price
 - platform: template
   sensors:
     stroom_prijs_huidig_all_in:
       icon_template: "mdi:home-lightning-bolt"
       friendly_name: "Huidige stroom prijs all-in"
       unit_of_measurement: "€/kWh"
+      # Template to determine the current all-inclusive electricity price
       value_template: >-
         {% set price = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'current_price') %}
         {% set stroom_btw = states('input_number.stroom_btw') | float %}
         {% set stroom_energie_belasting = states('input_number.stroom_energie_belasting') | float %}
         {% set stroom_energie_opslag = states('input_number.stroom_energie_opslag') | float %}
         {{ (( price+stroom_energie_belasting+stroom_energie_opslag) * stroom_btw) | round(5) }}
-        
+
+# Sensor to calculate the lowest all-inclusive electricity price
 - platform: template
   sensors:
     stroom_prijs_laagste_all_in:
       icon_template: "mdi:home-lightning-bolt"
       friendly_name: "Laagste stroom prijs all-in"
       unit_of_measurement: "€/kWh"
+      # Template to determine the lowest all-inclusive electricity price
       value_template: >-
         {% set price = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'min') %}
         {% set stroom_btw = states('input_number.stroom_btw') | float %}
@@ -74,12 +90,14 @@
         {% set stroom_energie_opslag = states('input_number.stroom_energie_opslag') | float %}
         {{ (( price+stroom_energie_belasting+stroom_energie_opslag) * stroom_btw) | round(5) }}
 
+# Sensor to calculate the highest all-inclusive electricity price
 - platform: template
   sensors:
     stroom_prijs_hoogste_all_in:
       icon_template: "mdi:home-lightning-bolt"
       friendly_name: "Hoogste stroom prijs all-in"
       unit_of_measurement: "€/kWh"
+      # Template to determine the highest all-inclusive electricity price
       value_template: >-
         {% set price = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'max') %}
         {% set stroom_btw = states('input_number.stroom_btw') | float %}
@@ -87,13 +105,17 @@
         {% set stroom_energie_opslag = states('input_number.stroom_energie_opslag') | float %}
         {{ (( price+stroom_energie_belasting+stroom_energie_opslag) * stroom_btw) | round(5) }}
 
+# Sensor to calculate electricity costs per hour
 - platform: template
   sensors:
     stroom_kosten_uur:
       icon_template: "mdi:home-lightning-bolt"
       friendly_name: "Stroom kosten per uur"
       unit_of_measurement: "€"
+      # Template to calculate hourly electricity costs based on consumption and price
       value_template: >-
         {% set gas_consumption = states('sensor.gas_verbruik_per_uur') | float %}
         {% set gas_price = states('sensor.huidige_gas_prijs_all_in') | float %}
         {{ (gas_consumption * gas_price) | round(2) }}
+
+# End of configuration

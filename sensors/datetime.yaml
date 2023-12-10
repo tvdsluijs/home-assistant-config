@@ -1,11 +1,21 @@
-# time date sensor
+# Time Date Configuration
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This section sets up the time_date platform in Home Assistant. 
+# It configures various time and date sensors, providing different formats and time zones.
+# These sensors are useful for automations or display in the UI where specific time or date formats are required.
+
 - platform: time_date
   display_options:
-    - 'time'
-    - 'date'
-    - 'date_time'
-    - 'date_time_utc'
-    - 'date_time_iso'
-    - 'time_date'
-    - 'time_utc'
-    - 'beat'
+    - 'time'             # Local time in HH:MM format
+    - 'date'             # Local date in YYYY-MM-DD format
+    - 'date_time'        # Local date and time in YYYY-MM-DD, HH:MM format
+    - 'date_time_utc'    # UTC date and time in YYYY-MM-DD, HH:MM format
+    - 'date_time_iso'    # Local date and time in ISO 8601 format: YYYY-MM-DDTHH:MM:SS
+    - 'time_date'        # Local time and date in HH:MM, YYYY-MM-DD format
+    - 'time_utc'         # UTC time in HH:MM format
+    - 'beat'             # Internet Time (Swatch .beat time) in @beats
+
+# End of configuration
