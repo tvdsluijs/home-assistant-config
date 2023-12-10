@@ -1,0 +1,15 @@
+### Input Boolean Configuration for Nordpool Message Tracking
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This configuration creates an input_boolean named 'Nordpool Message Sent'. 
+# It's used to track whether a message about Nordpool energy prices has been sent. 
+# This input_boolean helps in automations to ensure that messages are sent only once.
+
+# Input Boolean to track if the Nordpool message has been sent
+nordpool_message_sent:
+  name: Nordpool Message Sent  # Friendly name for the input_boolean
+  initial: off  # The initial state is set to 'off'
+
+# End of configuration

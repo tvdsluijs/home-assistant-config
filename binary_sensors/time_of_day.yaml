@@ -1,0 +1,73 @@
+### Time of Day Binary Sensors Configuration
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+# Description: This configuration sets up a series of binary sensors using the Time of Day (TOD) platform.
+# These sensors are designed to indicate different periods of the day, such as early morning, breakfast time, 
+# lunchtime, etc., based on specific time ranges. They are useful for automations that depend on the time of day.
+
+# Sensor for Early Morning
+- platform: tod
+  name: "Vroege Ochtend"
+  after: sunrise       # Starts 2 hours before sunrise
+  after_offset: "-02:00"
+  before: "07:00"      # Ends at 7:00 AM
+  unique_id: vroege_ochtend_sensor
+
+# Sensor for Breakfast Time
+- platform: tod
+  name: "Ontbijttijd"
+  after: "07:00"       # Starts at 7:00 AM
+  before: "09:00"      # Ends at 9:00 AM
+  unique_id: ontbijttijd_sensor
+
+# Sensor for Late Breakfast
+- platform: tod
+  name: "Laat Ontbijt"
+  after: "09:00"       # Starts at 9:00 AM
+  before: "11:00"      # Ends at 11:00 AM
+  unique_id: laat_ontbijt_sensor
+
+# Sensor for Lunch Time
+- platform: tod
+  name: "Lunchtijd"
+  after: "11:00"       # Starts at 11:00 AM
+  before: "13:00"      # Ends at 1:00 PM
+  unique_id: lunchtijd_sensor
+
+# Sensor for Early Afternoon
+- platform: tod
+  name: "Vroege Middag"
+  after: "13:00"       # Starts at 1:00 PM
+  before: "15:00"      # Ends at 3:00 PM
+  unique_id: vroege_middag_sensor
+
+# Sensor for Tea Time
+- platform: tod
+  name: "Theetijd"
+  after: "15:00"       # Starts at 3:00 PM
+  before: "17:00"      # Ends at 5:00 PM
+  unique_id: theetijd_sensor
+
+# Sensor for Dinner Time
+- platform: tod
+  name: "Dinertijd"
+  after: "17:00"       # Starts at 5:00 PM
+  before: "19:00"      # Ends at 7:00 PM
+  unique_id: dinertijd_sensor
+
+# Sensor for Evening
+- platform: tod
+  name: "Avond"
+  after: "19:00"       # Starts at 7:00 PM
+  before: "23:00"      # Ends at 11:00 PM
+  unique_id: avond_sensor
+
+# Sensor for Night
+- platform: tod
+  name: "Nacht"
+  after: "23:00"       # Starts at 11:00 PM
+  before: sunrise      # Ends at sunrise
+  unique_id: nacht_sensor
+
+# End of configuration

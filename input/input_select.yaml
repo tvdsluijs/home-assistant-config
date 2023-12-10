@@ -1,0 +1,38 @@
+### Input Select Configuration for Energy Colors
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This configuration creates an input_select named 'energy_colors' which includes a range of color options. 
+# These colors can be used to visually represent different levels or categories of energy data, 
+# such as pricing or usage intensity, in Home Assistant automations or visualizations.
+
+# Input Select for Energy Colors
+energy_colors:
+  options:
+    - '00FF00'  # Green shades representing lower energy levels or costs
+    - '15FF00'
+    - '2BFF00'
+    - '40FF00'
+    - '55FF00'
+    - '6AFF00'
+    - '80FF00'
+    - '95FF00'
+    - 'AAFF00'
+    - 'BFFF00'
+    - 'D4FF00'
+    - 'EAFF00'
+    - 'FFFF00'  # Yellow shade indicating medium energy levels or costs
+    - 'FFEA00'
+    - 'FFD400'
+    - 'FFBF00'
+    - 'FFAA00'
+    - 'FF9500'
+    - 'FF8000'
+    - 'FF6A00'
+    - 'FF5500'
+    - 'FF4000'
+    - 'FF2B00'
+    - 'FF0000'  # Red shades indicating higher energy levels or costs
+
+# End of configuration

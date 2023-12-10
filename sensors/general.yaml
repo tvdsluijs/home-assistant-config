@@ -1,0 +1,20 @@
+# Time Date Configuration
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This general file for sensors contains some ... general sensors\
+
+
+#This part sets up a derivative sensor in Home Assistant to calculate the rate of gas usage. 
+# It measures how much gas is used per minute, providing insight into gas consumption over time.
+- platform: derivative
+  source: sensor.p1_meter_3c39e72a602e_total_gas  # Source sensor for total gas usage
+  name: gas_meter_per_min  # Name of the derivative sensor
+  round: 3  # Rounds the value to 3 decimal places
+  unit_time: min  # Sets the unit of time for the rate calculation to minutes
+  unit: 'm³/min'  # Unit of measurement for the sensor (cubic meters per minute)
+  time_window: "00:01:00"  # Time window for calculating the derivative (1 minute)
+
+
+# End of configuration

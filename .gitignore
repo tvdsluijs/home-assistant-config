@@ -6,20 +6,19 @@
 !*.yaml
 !.gitignore
 !*.md
-# !www/images/*
-# !sensors
-# !sensors/*
-# !binary_sensors
-# !binary_sensors/*
-# !automations
-# !automations/*
-# !camera
-# !camera/*
-# !input
-# !input/*
-# !utility_meter
-# !utility_meter/*
-# !*.md
+!www/images/*
+!sensors
+!sensors/*
+!binary_sensors
+!binary_sensors/*
+!automations
+!automations/*
+!camera
+!camera/*
+!input
+!input/*
+!utility_meter
+!utility_meter/*
 
 
 # Ignore folders.

@@ -1,0 +1,39 @@
+
+### Camera Configuration in Home Assistant
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This configuration sets up several cameras in Home Assistant using the FFmpeg platform. 
+# It includes cameras for different locations such as the shed, stable, doorbell, and a special camera for a cat. 
+# Additionally, a weather camera is configured using the Buienradar platform.
+
+# FFmpeg camera for the shed
+- platform: ffmpeg
+  name: SchuurCam  # Name of the camera
+  input: !secret schuurcam  # Input source, URL is stored in secrets.yaml
+
+# FFmpeg camera for the stable
+- platform: ffmpeg
+  name: StalCam  # Name of the camera
+  input: !secret stalcam  # Input source, URL is stored in secrets.yaml
+
+# FFmpeg camera for the doorbell
+- platform: ffmpeg
+  name: Doorbell  # Name of the camera
+  input: !secret doorbel  # Input source, URL is stored in secrets.yaml
+
+# FFmpeg camera for the cat
+- platform: ffmpeg
+  name: CatCam  # Name of the camera
+  input: !secret catcam  # Input source, URL is stored in secrets.yaml
+
+# Another FFmpeg camera for the stable
+- platform: ffmpeg
+  name: StalCam2  # Name of the camera
+  input: !secret stalcam2  # Input source, URL is stored in secrets.yaml
+
+# Buienradar camera for weather visualization
+- platform: buienradar  # Uses the Buienradar platform for weather-related imagery
+
+# End of configuration

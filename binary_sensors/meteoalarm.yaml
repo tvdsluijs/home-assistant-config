@@ -1,0 +1,14 @@
+### MeteoAlarm Binary Sensor Configuration
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+# Description: This configuration sets up a binary sensor using the MeteoAlarm platform to provide weather alerts 
+# for a specific region. It's configured to monitor weather alerts for the province of Zeeland in the Netherlands.
+# Alerts are provided in Dutch (nl-NL). This sensor is useful for automations based on severe weather warnings.
+
+- platform: meteoalarm
+  country: "netherlands"  # Specifies the country for weather alerts
+  province: "Zeeland"     # Specifies the province within the country
+  language: nl-NL         # Sets the language for the alerts
+
+# End of configuration
