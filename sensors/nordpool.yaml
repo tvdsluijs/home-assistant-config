@@ -54,7 +54,7 @@
       unit_of_measurement: "€/kWh"
       # Template to determine the all-inclusive electricity price for the next hour
       value_template: >-
-        {% set price = state_attr('sensor.volgend_uur_stroom_prijs_inkoop', 'price') %}
+        {% set price = states('sensor.stroom_prijs_volgend_uur')  | float%}
         {% set stroom_btw = states('input_number.stroom_btw') | float %}
         {% set stroom_energie_belasting = states('input_number.stroom_energie_belasting') | float %}
         {% set stroom_energie_opslag = states('input_number.stroom_energie_opslag') | float %}

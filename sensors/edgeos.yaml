@@ -1,0 +1,164 @@
+### Sensor Templates for EdgeOS Router Traffic Data Formatting
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This configuration sets up template sensors to format network traffic data from an EdgeOS router. 
+# It includes templates for received and sent traffic, as well as the rates of data transfer, 
+# formatting the data into human-readable units (Bytes, KB, MB, GB, TB, PB).
+
+- platform: template
+  sensors:
+    formatted_received_rate:
+      icon_template: "mdi:download-network"
+      friendly_name: "Formatted Received Rate"
+      unit_of_measurement: "bytes"
+      value_template: >-
+        {% set bytes = states('sensor.edgerouter_x_5_port_interface_eth0_received_rate').split(',')[0] | int %}
+        {% if bytes < 1024 %}
+          {{ bytes }}
+        {% elif bytes < 1048576 %}
+          {{ (bytes / 1024) | round(2) }}
+        {% elif bytes < 1073741824 %}
+          {{ (bytes / 1048576) | round(2) }}
+        {% elif bytes < 1099511627776 %}
+          {{ (bytes / 1073741824) | round(2) }}
+        {% elif bytes < 1125899906842624 %}
+          {{ (bytes / 1099511627776) | round(2) }}
+        {% else %}
+          {{ (bytes / 1125899906842624) | round(2) }}
+        {% endif %}
+      attribute_templates:
+      # Additional attributes for real Unit of Measurment
+        u_o_m: >-
+            {% set bytes = states('sensor.edgerouter_x_5_port_interface_eth0_received_rate').split(',')[0] | int %}
+            {% if bytes < 1024 %}
+              B
+            {% elif bytes < 1048576 %}
+              KB
+            {% elif bytes < 1073741824 %}
+              MB
+            {% elif bytes < 1099511627776 %}
+              GB
+            {% elif bytes < 1125899906842624 %}
+              TB
+            {% else %}
+              PB
+            {% endif %}
+
+- platform: template
+  sensors:
+    formatted_received_traffic:
+      icon_template: "mdi:download-network-outline"
+      friendly_name: "Formatted Received Traffic"
+      unit_of_measurement: "bytes"
+      value_template: >-
+        {% set bytes = states('sensor.edgerouter_x_5_port_interface_eth0_received_traffic').split(',')[0] | int %}
+        {% if bytes < 1024 %}
+          {{ bytes }}
+        {% elif bytes < 1048576 %}
+          {{ (bytes / 1024) | round(2) }}
+        {% elif bytes < 1073741824 %}
+          {{ (bytes / 1048576) | round(2) }}
+        {% elif bytes < 1099511627776 %}
+          {{ (bytes / 1073741824) | round(2) }}
+        {% elif bytes < 1125899906842624 %}
+          {{ (bytes / 1099511627776) | round(2) }}
+        {% else %}
+          {{ (bytes / 1125899906842624) | round(2) }}
+        {% endif %}
+      attribute_templates:
+      # Additional attributes for real Unit of Measurment
+        u_o_m: >-
+            {% set bytes = states('sensor.edgerouter_x_5_port_interface_eth0_received_traffic').split(',')[0] | int %}
+            {% if bytes < 1024 %}
+              B
+            {% elif bytes < 1048576 %}
+              KB
+            {% elif bytes < 1073741824 %}
+              MB
+            {% elif bytes < 1099511627776 %}
+              GB
+            {% elif bytes < 1125899906842624 %}
+              TB
+            {% else %}
+              PB
+            {% endif %}
+            
+- platform: template
+  sensors:
+    formatted_sent_rate:
+      icon_template: "mdi:upload-network"
+      friendly_name: "Formatted Send Rate"
+      unit_of_measurement: "bytes"
+      value_template: >-
+        {% set bytes = states('sensor.edgerouter_x_5_port_interface_eth0_sent_rate').split(',')[0] | int %}
+        {% if bytes < 1024 %}
+          {{ bytes }}
+        {% elif bytes < 1048576 %}
+          {{ (bytes / 1024) | round(2) }}
+        {% elif bytes < 1073741824 %}
+          {{ (bytes / 1048576) | round(2) }}
+        {% elif bytes < 1099511627776 %}
+          {{ (bytes / 1073741824) | round(2) }}
+        {% elif bytes < 1125899906842624 %}
+          {{ (bytes / 1099511627776) | round(2) }}
+        {% else %}
+          {{ (bytes / 1125899906842624) | round(2) }}
+        {% endif %}
+      attribute_templates:
+      # Additional attributes for real Unit of Measurment
+        u_o_m: >-
+            {% set bytes = states('sensor.edgerouter_x_5_port_interface_eth0_sent_rate').split(',')[0] | int %}
+            {% if bytes < 1024 %}
+              B
+            {% elif bytes < 1048576 %}
+              KB
+            {% elif bytes < 1073741824 %}
+              MB
+            {% elif bytes < 1099511627776 %}
+              GB
+            {% elif bytes < 1125899906842624 %}
+              TB
+            {% else %}
+              PB
+            {% endif %}
+            
+- platform: template
+  sensors:
+    formatted_sent_traffic:
+      icon_template: "mdi:upload-network-outline"
+      friendly_name: "Formatted Send Traffic"
+      unit_of_measurement: "bytes"
+      value_template: >-
+        {% set bytes = states('sensor.edgerouter_x_5_port_interface_eth0_sent_traffic').split(',')[0] | int %}
+        {% if bytes < 1024 %}
+          {{ bytes }}
+        {% elif bytes < 1048576 %}
+          {{ (bytes / 1024) | round(2) }}
+        {% elif bytes < 1073741824 %}
+          {{ (bytes / 1048576) | round(2) }}
+        {% elif bytes < 1099511627776 %}
+          {{ (bytes / 1073741824) | round(2) }}
+        {% elif bytes < 1125899906842624 %}
+          {{ (bytes / 1099511627776) | round(2) }}
+        {% else %}
+          {{ (bytes / 1125899906842624) | round(2) }}
+        {% endif %}
+      attribute_templates:
+      # Additional attributes for real Unit of Measurment
+        u_o_m: >-
+            {% set bytes = states('sensor.edgerouter_x_5_port_interface_eth0_sent_traffic').split(',')[0] | int %}
+            {% if bytes < 1024 %}
+              B
+            {% elif bytes < 1048576 %}
+              KB
+            {% elif bytes < 1073741824 %}
+              MB
+            {% elif bytes < 1099511627776 %}
+              GB
+            {% elif bytes < 1125899906842624 %}
+              TB
+            {% else %}
+              PB
+            {% endif %}

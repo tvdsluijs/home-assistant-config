@@ -1,7 +1,9 @@
 - id: '1702134691039'
-  alias: New automation
-  description: test
-  trigger: []
-  condition: []
-  action: []
-  mode: single
+  alias: Reload Templates on Restart
+  description: Automatically reloads template entities after Home Assistant restarts.
+  trigger:
+  action:
+  - service: homeassistant.reload_config_entry
+    target:
+      entity_id: sensor.formatted_received_traffic
+    data: {}
