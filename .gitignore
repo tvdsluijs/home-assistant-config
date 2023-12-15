@@ -11,14 +11,20 @@
 !sensors/*
 !binary_sensors
 !binary_sensors/*
-!automations
-!automations/*
+!automation
+!automation/*
 !camera
 !camera/*
 !input
 !input/*
 !utility_meter
 !utility_meter/*
+!lovelace-ui
+!lovelace-ui/*
+!shell_commands
+!shell_commands/*
+!rest_commands
+!rest_commands/*
 
 
 # Ignore folders.
@@ -57,5 +63,5 @@ home-assistant_v2.db
 home-assistant_v2.db-shm
 home-assistant_v2.db-wal
 
-# Ignore Python cache files 
+# Ignore Python cache files
 __pycache__/

@@ -1,67 +1,65 @@
 #===============================================================
-## home assistand informatie
+## Home Assistant Information
+#===============================================================
+# This is the primary configuration file for Home Assistant. It organizes and includes various sub-configurations
+# and settings, such as frontend themes, SSL certificates, text-to-speech options, and more.
+# It helps in maintaining a structured and modular approach to configuring different aspects of the Home Assistant setup.
+#
+# Author: Theo van der Sluijs / Home Automation
+# Contact: info@itheo.tech
+# url: https://itheo.tech english blog
+# url: https://vandersluijs.nl dutch blog
+#
+#===============================================================
+# Main configuration section for Home Assistant
 #===============================================================
 homeassistant:
-  customize: !include customize.yaml
+  customize: !include customize.yaml  # Includes customizations for entities
   allowlist_external_dirs:
-      - "/config"
+      - "/config"  # Whitelists the /config directory for external file access
 
+#===============================================================
+# Frontend configuration
+#===============================================================
 frontend:
-  themes: !include_dir_merge_named themes
+  themes: !include_dir_merge_named themes  # Includes themes for the frontend
 
-# Configure a default setup of Home Assistant (frontend, api, etc)
+#===============================================================
+# Default configuration for Home Assistant (frontend, api, etc)
+#===============================================================
 default_config:
 
 #===============================================================
-#http:
+# HTTP / HTTPS Configuration
+#================================================================
 http:
-  ssl_certificate: /ssl/fullchain.pem
-  ssl_key: /ssl/privkey.pem
+  ssl_certificate: /ssl/fullchain.pem  # Path to the SSL certificate
+  ssl_key: /ssl/privkey.pem  # Path to the SSL key
 
-#===============================================================
-# Text to speech
+#================================================================
+# Text to Speech Configuration
+#================================================================
 tts:
-  - platform: google_translate
-    language: 'nl'
-
+  - platform: google_translate  # Uses Google Translate for text-to-speech
+    language: 'nl'  # Sets the language to Dutch
 
 #===============================================================
-## Includes zodat deze lijst overzichtelijker blijft
+## Includes for Organizing Configuration Files
 #===============================================================
-group: !include groups.yaml
-automation: !include automations.yaml
-automation mine: !include_dir_list automation/
-script: !include scripts.yaml
-scene: !include scenes.yaml
-template: !include templates.yaml
-input_number: !include input/input_number.yaml
-input_select: !include input/input_select.yaml
-input_boolean: !include input/input_boolean.yaml
-sensor: !include_dir_merge_list sensors/
-binary_sensor: !include_dir_merge_list binary_sensors/
-camera: !include_dir_merge_list camera/
-# utility_meter: !include utility_meter/utility.yaml    NIEUW EERST TESTEN
+group: !include groups.yaml  # Includes group configurations
+automation: !include automations.yaml  # Includes automation configurations
+automation mine: !include_dir_list automation/  # Includes additional automations from a directory
+script: !include scripts.yaml  # Includes script configurations
+scene: !include scenes.yaml  # Includes scene configurations
+template: !include templates.yaml  # Includes template configurations
+input_number: !include input/input_number.yaml  # Includes input number configurations
+input_select: !include input/input_select.yaml  # Includes input select configurations
+input_boolean: !include input/input_boolean.yaml  # Includes input boolean configurations
+sensor: !include_dir_merge_list sensors/  # Includes sensor configurations from a directory
+binary_sensor: !include_dir_merge_list binary_sensors/  # Includes binary sensor configurations from a directory
+camera: !include_dir_merge_list camera/  # Includes camera configurations from a directory
+rest_command: !include_dir_list rest_commands/  # Includes REST command configurations from a directory
+shell_command: !include_dir_list shell_commands/  # Includes shell command configurations from a directory
+# utility_meter: !include utility_meter/utility.yaml  # Includes utility meter configurations (commented out for testing)
 
-rest_command:
-  shelly_rgb:
-    url: 'http://{{ IP_address }}/rpc/'
-    method: POST
-    headers:
-      accept: "application/json, text/html"
-    payload: '{"id": {{ range(1,100) | random }},"method": "PLUGS_UI.SetConfig","params": {"config": {"leds": {"mode": "switch","colors": {"switch:0": {"{{ status }}": {"rgb": [{{ color_r }},{{ color_g }},{{ color_b }}],"brightness" :{{ brightness }}}}}}}}}'
-    content_type:  'application/json; charset=utf-8'
-
-shell_command:
-    ntfy: >
-        curl
-        -X POST
-        --url 'https://ntfy.sh/{{ topic }}'
-        --data '{{ message }}'
-        --header 'X-Title: {{ title }}'
-        --header 'X-Tags: {{ tags }}'
-        --header 'X-Priority: {{ priority }}'
-        --header 'X-Delay: {{ delay }}'
-        --header 'X-Actions: {{ actions }}'
-        --header 'X-Markdown: {{ markdown }}'
-        --header 'X-Click: {{ click }}'
-        --header 'X-Icon: {{ icon }}'
+# End of configuration

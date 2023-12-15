@@ -1,5 +1,6 @@
-# Home Assistant Configuration 
-Welcome to my Home Assistant configuration repository! This is where I share my personal Home Assistant setup, designed to enhance and automate my home environment. 
+# Home Assistant Configuration
+Welcome to my Home Assistant configuration repository!
+This is where I share my personal Home Assistant setup, designed to enhance and automate my home environment.
 The configurations here aim to provide a seamless and intuitive smart home experience.
 
 ## Overview
@@ -34,7 +35,7 @@ This repository is a personal project and is not officially affiliated with Home
 
 ## Contact
 
-Feel free to reach out if you have any questions or suggestions. [Create an issue](https://github.com/tvdsluijs/home-assistant-configs/issues) on this repository for support or discussions.
+Feel free to reach out if you have any questions or suggestions. [Create an issue](https://github.com/tvdsluijs/home-assistant-configs/issues) on this repository for support or discussions. You can also always contact me by [email](mailto:info@itheo.tech)
 
 ## Donation
 
