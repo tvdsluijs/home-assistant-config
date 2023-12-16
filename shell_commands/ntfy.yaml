@@ -8,19 +8,19 @@
 # It's used to send notifications via the Ntfy service. The command is flexible and allows for various
 # parameters like title, tags, priority, and more to be specified for the notification.
 
-ntfy: >
-  # The curl command to send a POST request to the Ntfy service
-  curl
-  -X POST
-  --url 'https://ntfy.sh/{{ topic }}'  # URL with a templated topic for the notification
-  --data '{{ message }}'  # The message content of the notification
-  --header 'X-Title: {{ title }}'  # Header for specifying the notification title
-  --header 'X-Tags: {{ tags }}'  # Header for specifying tags associated with the notification
-  --header 'X-Priority: {{ priority }}'  # Header for setting the priority of the notification
-  --header 'X-Delay: {{ delay }}'  # Header for specifying any delay before the notification is sent
-  --header 'X-Actions: {{ actions }}'  # Header for specifying actions associated with the notification
-  --header 'X-Markdown: {{ markdown }}'  # Header to enable Markdown formatting in the notification
-  --header 'X-Click: {{ click }}'  # Header for specifying a URL to open when the notification is clicked
-  --header 'X-Icon: {{ icon }}'  # Header for specifying an icon for the notification
+- ntfy: >
+    # The curl command to send a POST request to the Ntfy service
+    curl
+    -X POST
+    --url 'https://ntfy.sh/{{ topic }}'  # URL with a templated topic for the notification
+    --data '{{ message }}'  # The message content of the notification
+    --header 'X-Title: {{ title }}'  # Header for specifying the notification title
+    --header 'X-Tags: {{ tags }}'  # Header for specifying tags associated with the notification
+    --header 'X-Priority: {{ priority }}'  # Header for setting the priority of the notification
+    --header 'X-Delay: {{ delay }}'  # Header for specifying any delay before the notification is sent
+    --header 'X-Actions: {{ actions }}'  # Header for specifying actions associated with the notification
+    --header 'X-Markdown: {{ markdown }}'  # Header to enable Markdown formatting in the notification
+    --header 'X-Click: {{ click }}'  # Header for specifying a URL to open when the notification is clicked
+    --header 'X-Icon: {{ icon }}'  # Header for specifying an icon for the notification
 
 # End of configuration
