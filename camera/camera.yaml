@@ -4,8 +4,8 @@
 # Author: Theo van der Sluijs
 # Contact: info@itheo.tech
 #
-# Description: This configuration sets up several cameras in Home Assistant using the FFmpeg platform. 
-# It includes cameras for different locations such as the shed, stable, doorbell, and a special camera for a cat. 
+# Description: This configuration sets up several cameras in Home Assistant using the FFmpeg platform.
+# It includes cameras for different locations such as the shed, stable, doorbell, and a special camera for a cat.
 # Additionally, a weather camera is configured using the Buienradar platform.
 
 # FFmpeg camera for the shed
@@ -32,8 +32,5 @@
 - platform: ffmpeg
   name: StalCam2  # Name of the camera
   input: !secret stalcam2  # Input source, URL is stored in secrets.yaml
-
-# Buienradar camera for weather visualization
-- platform: buienradar  # Uses the Buienradar platform for weather-related imagery
 
 # End of configuration
