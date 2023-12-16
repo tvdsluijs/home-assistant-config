@@ -8,7 +8,7 @@
 # It's used to send notifications via the Ntfy service. The command is flexible and allows for various
 # parameters like title, tags, priority, and more to be specified for the notification.
 
-- ntfy: >
+ntfy: >
     # The curl command to send a POST request to the Ntfy service
     curl
     -X POST
