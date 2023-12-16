@@ -1,0 +1,29 @@
+### Home Assistant Restart Notification Automation
+#
+# Editor: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Org Author: Huizebruin / https://github.com/huizebruin
+#
+# Description: This automation sends a notification when Home Assistant starts up. It's useful for monitoring system restarts and ensuring that your Home Assistant instance is running as expected.
+
+alias: 'Systeem : Home Assistant is opnieuw opgestart'
+description: 'Deze automatisering stuurt een notificatie wanneer Home Assistant opstart, wat nuttig is voor het monitoren van systeemherstarts en om te verzekeren dat je Home Assistant-instance draait.'
+
+# Trigger for the automation
+trigger:
+  - platform: homeassistant
+    event: start  # Triggers when Home Assistant starts
+
+condition: []  # No conditions are set for this automation
+
+# Actions to perform when the automation is triggered
+action:
+  - service: notify.mobile_app_iphone_van_theo
+    data:
+      message: Home assistant is opnieuw opgestart
+      title: "\U0001F6A7 Home Assistant ⚠️  \U0001F389"  # Emoji-styled title for the notification
+
+mode: single  # The automation runs in single mode (does not queue multiple instances)
+
+# End of configuration

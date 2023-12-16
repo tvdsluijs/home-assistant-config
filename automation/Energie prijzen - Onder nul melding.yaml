@@ -1,0 +1,66 @@
+### Electricity Price Drop Notification Automation
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This automation notifies when the electricity purchase price is forecasted to drop below 0.001. 
+# It checks the price every hour and sends notifications if the upcoming hour's price is below the threshold.
+
+alias: 'Energie prijzen : Onder nul melding'  # Name of the automation
+description: 'Deze automatisering geeft een melding wanneer de aankoopprijs van elektriciteit naar verwachting onder de 0,001 zal dalen.'  # Description of the automation
+
+# Trigger for the automation
+trigger:
+  - platform: time_pattern
+    hours: "*"  # Every hour
+    minutes: "2"  # At 2 minutes past the hour
+
+# Conditions to check before executing actions
+condition:
+  - condition: time
+    after: "06:00:00"  # Only after 6:00 AM
+    before: "23:00:00"  # And before 11:00 PM
+  - condition: numeric_state
+    entity_id: sensor.volgend_uur_stroom_prijs_inkoop
+    below: 0.001  # Check if the price is below 0.001
+    attribute: price
+
+# Actions to perform if the condition is met
+action:
+  - service: shell_command.ntfy
+    data:
+      topic: eprijzen_ondernul
+      title: Stroom onder Nul
+      markdown: "Yes"
+      message: >
+        Om {{((now().timestamp()|int) +3600) | timestamp_custom("%H:00")}} gaat
+        de Inkoop 💡 prijs naar €
+        {{state_attr('sensor.volgend_uur_stroom_prijs_inkoop', 'price') | round(3)}}
+  - service: notify.mobile_app_iphone_van_theo
+    data:
+      title: Stroom onder Nul
+      message: >
+        Om {{((now().timestamp()|int) +3600) | timestamp_custom("%H:00")}} gaat
+        de Inkoop 💡 prijs naar €
+        {{state_attr('sensor.volgend_uur_stroom_prijs_inkoop', 'price') | round(3)}}
+      data:
+        push:
+          sound: claire-enhanced-de-stroomprijs-gaat-onder-nul.wav
+  - service: persistent_notification.create
+    data:
+      title: Stroom onder Nul
+      message: >
+        Om {{((now().timestamp()|int) +3600) | timestamp_custom("%H:00")}} gaat
+        de Inkoop 💡 prijs naar €
+        {{state_attr('sensor.volgend_uur_stroom_prijs_inkoop', 'price') | round(3)}}
+  - service: notify.notify
+    data:
+      title: Stroom onder Nul
+      message: >
+        Om {{((now().timestamp()|int) +3600) | timestamp_custom("%H:00")}} gaat
+        de Inkoop 💡 prijs naar €
+        {{state_attr('sensor.volgend_uur_stroom_prijs_inkoop', 'price') | round(3)}}
+
+mode: single  # The automation runs in single mode (does not queue multiple instances)
+
+# End of configuration

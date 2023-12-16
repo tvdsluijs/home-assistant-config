@@ -1,0 +1,38 @@
+### HACS Update Notification Automation
+#
+# Editor: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Org Author: Huizebruin / https://github.com/huizebruin
+#
+# Description: This automation sends a notification when there are updates available in HACS (Home Assistant Community Store).
+# It checks the state of the HACS sensor and triggers a notification if updates are available.
+
+alias: 'Systeem : Home Assistant hacs update'
+description: 'Deze automatisering stuurt een notificatie wanneer er updates beschikbaar zijn in HACS (Home Assistant Community Store). Het controleert de staat van de HACS-sensor en activeert een melding als er updates zijn.'
+
+# Trigger for the automation
+trigger:
+  - platform: state
+    entity_id: sensor.hacs  # Monitors the HACS sensor for updates
+
+# Conditions to check before executing actions
+condition:
+  - condition: template
+    value_template: '{{ states(trigger.entity_id) != ''unknown''}}'  # Ensures the sensor state is not 'unknown'
+  - condition: template
+    value_template: '{{ (states(trigger.entity_id) | float) != 0}}'  # Checks if there are updates available
+
+# Actions to perform if the condition is met
+action:
+  - service: notify.mobile_app_iphone_van_theo
+    data:
+      title: "\U0001F6A7 HACS update"
+      message: >-
+        {% for repo in state_attr(trigger.entity_id, 'repositories') %}
+          - {{ repo.display_name }} ({{ repo["available_version"]}})
+        {% endfor %}  # Lists the available updates for each repository in HACS
+
+mode: single  # The automation runs in single mode (does not queue multiple instances)
+
+# End of configuration

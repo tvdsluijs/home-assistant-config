@@ -1,0 +1,22 @@
+### Reset Daily Energy Prices Message Automation
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This automation resets the daily energy prices message indicator just after midnight. 
+# It ensures that the notification for energy prices can be sent again the next day.
+
+alias: 'Energie prijzen : Reset dagelijks Energieprijzen bericht'  # Name of the automation
+description: 'Deze automatisering reset de dagelijkse berichtindicator voor de energieprijzen net na middernacht. Het zorgt ervoor dat de melding voor de energieprijzen de volgende dag opnieuw verzonden kan worden.'  # Description of the automation 
+
+# Trigger for the automation
+trigger:
+  - platform: time
+    at: "00:01:00"  # The automation runs just after midnight
+
+# Actions to perform when the automation is triggered
+action:
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.nordpool_message_sent  # Resets the indicator for the daily energy prices message
+
+# End of configuration

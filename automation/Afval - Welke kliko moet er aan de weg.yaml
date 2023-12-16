@@ -1,0 +1,48 @@
+### Afvalmelding Automation Configuration
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This automation sends a notification at 18:00 each day if there is waste to be collected the next day.
+# It checks if there is any trash type scheduled for collection tomorrow and notifies through several methods if there is.
+
+alias: 'Afval : Welke kliko moet er aan de weg' # Name of the automation
+description: 'Deze automatisering geeft dagelijks om 18.00 uur een melding als er de volgende dag afval opgehaald moet worden.'
+
+
+# Trigger for the automation
+trigger:
+  - platform: time
+    at: "18:00:00"  # The automation runs at 6:00 PM
+
+# Condition to check before executing actions
+condition:
+  - condition: not  # Ensures the action only runs if there's trash to be collected
+    conditions:
+      - condition: state
+        entity_id: sensor.afvalinfo_home_trash_type_tomorrow
+        state: geen  # Checks if the state is not 'geen' (which means no trash)
+
+# Actions to perform if the condition is met
+action:
+  - service: notify.mobile_app_iphone_van_theo
+    data:
+      title: Afval morgen
+      message: "Afval morgen: {{states.sensor.afvalinfo_home_trash_type_tomorrow.state}}"
+  - service: persistent_notification.create
+    data:
+      title: Afval morgen
+      message: "Afval morgen: {{states.sensor.afvalinfo_home_trash_type_tomorrow.state}}"
+  - service: shell_command.ntfy
+    data:
+      topic: tvdsluijs_afval
+      title: Afval morgen
+      message: "Afval morgen: {{states.sensor.afvalinfo_home_trash_type_tomorrow.state}}"
+  - service: notify.notify
+    data:
+      title: Afval morgen
+      message: "Afval morgen: {{states.sensor.afvalinfo_home_trash_type_tomorrow.state}}"
+
+mode: single  # The automation runs in single mode (does not queue multiple instances)
+
+# End of configuration

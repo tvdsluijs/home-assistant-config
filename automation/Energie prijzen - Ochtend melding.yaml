@@ -1,0 +1,53 @@
+### Morning Energy Prices Notification Automation
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+# Description: This automation sends a morning notification with the day's energy prices. 
+# It provides information on the lowest and highest electricity prices, as well as the current gas price after 6 AM.
+
+alias: 'Energie prijzen : Ochtend melding'  # Name of the automation
+description: 'Deze automatisering stuurt een ochtendmelding met de energieprijzen van de dag. Het geeft informatie over de laagste en hoogste elektriciteitsprijzen, evenals de huidige gasprijs na 06.00 uur.'  # Description of the automation
+
+# Trigger for the automation
+trigger:
+  - platform: time
+    at: "08:00:00"  # The automation runs at 8:00 AM
+
+condition: []  # No conditions are set for this automation
+
+# Actions to perform when the automation is triggered
+action:
+  - service: notify.mobile_app_iphone_van_theo
+    data:
+      title: Ochtend prijzen melding
+      message: >
+        Inkoop prijs {{ now().strftime("%d %b `%y") }} 
+
+        💡 laagste €. {{state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'min') | round(3)}} / kWh  
+
+        💡 hoogste €. {{state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'max') | round(3)}} / kWh
+
+        🔥 Na 06u €. {{states('sensor.huidige_gas_prijs_inkoop') | round(3)}} / m3
+      data:
+        url: /lovelace/energie-prijzen
+        clickAction: /lovelace/energie-prijzen-vandaag
+        push:
+          sound: claire-enhanced-goedemorgen-hier-is-je-dagelijkse-energie-prijs-overzicht.wav
+  - service: persistent_notification.create
+    data:
+      title: Ochtend prijzen melding
+      message: >
+        Inkoop prijs {{ now().strftime("%d %b `%y") }} 
+
+        💡 laagste €. {{state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'min') | round(3)}} / kWh  
+
+        💡 hoogste €. {{state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'max') | round(3)}} / kWh
+
+        🔥 Na 06u €. {{states('sensor.huidige_gas_prijs_inkoop') | round(3)}} / m3
+      data:
+        url: /lovelace/energie-prijzen
+        clickAction: /lovelace/energie-prijzen-vandaag
+
+mode: single  # The automation runs in single mode (does not queue multiple instances)
+
+# End of configuration
