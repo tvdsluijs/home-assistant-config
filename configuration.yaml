@@ -58,8 +58,32 @@ input_boolean: !include input/input_boolean.yaml  # Includes input boolean confi
 sensor: !include_dir_merge_list sensors/  # Includes sensor configurations from a directory
 binary_sensor: !include_dir_merge_list binary_sensors/  # Includes binary sensor configurations from a directory
 camera: !include_dir_merge_list camera/  # Includes camera configurations from a directory
-rest_command: !include_dir_merge_list rest_commands/  # Includes REST command configurations from a directory
-shell_command: !include_dir_merge_list shell_commands/  # Includes shell command configurations from a directory
+# rest_command: !include_dir_merge_list rest_commands/  # Includes REST command configurations from a directory
+# shell_command: !include_dir_merge_list shell_commands/  # Includes shell command configurations from a directory
 # utility_meter: !include utility_meter/utility.yaml  # Includes utility meter configurations (commented out for testing)
+
+rest_command:
+  shelly_rgb:
+    url: 'http://{{ IP_address }}/rpc/'
+    method: POST
+    headers:
+      accept: "application/json, text/html"
+    payload: '{"id": {{ range(1,100) | random }},"method": "PLUGS_UI.SetConfig","params": {"config": {"leds": {"mode": "switch","colors": {"switch:0": {"{{ status }}": {"rgb": [{{ color_r }},{{ color_g }},{{ color_b }}],"brightness" :{{ brightness }}}}}}}}}'
+    content_type:  'application/json; charset=utf-8'
+
+shell_command:
+  ntfy: >
+      curl
+      -X POST
+      --url 'https://ntfy.sh/{{ topic }}'
+      --data '{{ message }}'
+      --header 'X-Title: {{ title }}'
+      --header 'X-Tags: {{ tags }}'
+      --header 'X-Priority: {{ priority }}'
+      --header 'X-Delay: {{ delay }}'
+      --header 'X-Actions: {{ actions }}'
+      --header 'X-Markdown: {{ markdown }}'
+      --header 'X-Click: {{ click }}'
+      --header 'X-Icon: {{ icon }}'
 
 # End of configuration
