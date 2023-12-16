@@ -1,0 +1,21 @@
+### REST Command Configuration for Shelly Plug RGB Control
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+# url:
+#
+# Description: This configuration sets up a REST command in Home Assistant named 'shelly_rgb'.
+# It's designed to control the RGB LED settings of a Shelly Plug. The command allows you to set the color
+# and brightness of the plug's LED based on the provided parameters.
+
+- shelly_rgb:
+    url: 'http://{{ IP_address }}/rpc/'  # URL for the Shelly Plug, using a templated IP address
+    method: POST  # Method for the REST command
+    headers:
+      accept: "application/json, text/html"  # Accept headers for the request
+    payload: >-
+      # Payload to control the RGB LED settings of the Shelly Plug
+      '{"id": {{ range(1,100) | random }},"method": "PLUGS_UI.SetConfig","params": {"config": {"leds": {"mode": "switch","colors": {"switch:0": {"{{ status }}": {"rgb": [{{ color_r }},{{ color_g }},{{ color_b }}],"brightness" :{{ brightness }}}}}}}}}'
+    content_type:  'application/json; charset=utf-8'  # Content type for the request
+
+# End of configuration
