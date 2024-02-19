@@ -1,0 +1,43 @@
+# Sensor voor het ophalen van stroomprijzen
+  - platform: rest
+    name: Stroomprijzen  # De naam van de sensor zoals die in Home Assistant verschijnt
+    unique_id: eaz_stroomprijzen  # Unieke identificatie voor de sensor
+    # De URL van de API resource. Vervang {SUPPLIER_SHORT_NAME} met de korte naam van jouw gasleverancier.
+    # Vervang {TOKEN} met jouw persoonlijke API token.
+    # De API token kan worden verkregen door een account aan te maken en API calls te kopen op energieadvieszeeland.nl.    
+    resource: !secret energy_advies_stroom  # De API URL voor stroomprijzen
+    method: GET  # HTTP methode voor de API aanroep
+    icon: mdi:lightning-bolt  # Icoon voor de sensor in Home Assistant
+    scan_interval: 3600  # Interval in seconden voor het ophalen van nieuwe data (1 uur)
+    value_template: "{{ value_json.date }}"  # Hoofdwaarde van de sensor; hier de datum van de data
+    json_attributes:  # Lijst van JSON attributen om op te slaan als sensor attributen
+      - type
+      - supplier  
+      - raw_today
+      - highest_today
+      - lowest_today
+      - tomorrow_valid
+      - raw_tomorrow
+      - date
+      
+# Sensor voor het ophalen van gasprijzen
+  - platform: rest
+    name: Gasprijzen  # De naam van de sensor zoals die in Home Assistant verschijnt
+    unique_id: eaz_gasprijzen  # Unieke identificatie voor de sensor
+    # De URL van de API resource. Vervang {SUPPLIER_SHORT_NAME} met de korte naam van jouw gasleverancier.
+    # Vervang {TOKEN} met jouw persoonlijke API token.
+    # De API token kan worden verkregen door een account aan te maken en API calls te kopen op energieadvieszeeland.nl.      
+    resource: !secret energy_advies_gas  # De API URL voor stroomprijzen
+    method: GET  # HTTP methode voor de API aanroep
+    icon: mdi:gas-burner  # Icoon voor de sensor in Home Assistant
+    scan_interval: 3600  # Interval in seconden voor het ophalen van nieuwe data (1 uur)
+    value_template: "{{ value_json.date }}"  # Hoofdwaarde van de sensor; hier de datum van de data
+    json_attributes:  # Lijst van JSON attributen om op te slaan als sensor attributen
+      - type
+      - supplier
+      - raw_today
+      - highest_today
+      - lowest_today
+      - tomorrow_valid
+      - raw_tomorrow
+      - date
