@@ -1,0 +1,24 @@
+# Automation to send a notification when water consumption exceeds 50 liters over the start value
+alias: "Water verbruik: 50 Liter Notificatie"
+trigger:
+  - platform: template
+    value_template: >
+      {% set total_usage = states('sensor.watermeter_3c39e72f9812_total_water_usage') | float %}
+      {% set total_liters = (total_usage // 1) * 1000 + (total_usage % 1 * 1000) %}
+      {% set start_liters = states('input_number.water_start') | float %}
+      {% if start_liters > 0 %}
+        {{ total_liters - start_liters >= 50 }}
+      {% else %}
+        false
+      {% endif %}
+
+action:
+  - service: notify.mobile_app_iphone_van_theo
+    data:
+      message: "Waarschuwing: Waterverbruik is nu 50 liter over de startwaarde. Totaal verbruik: {{ total_liters }} liter."
+      push:
+        sound: claire-enhanced-staat-er-ergens-nog-een-kraan-open.wav
+  - service: homeassistant.update_entity
+    target:
+      entity_id: input_number.water_start
+mode: single

@@ -1,0 +1,18 @@
+# Automatisering om de startwaarde van het totale waterverbruik op te slaan
+alias: "Water verbruik: Active water usage startwaarde"
+
+trigger:
+- platform: numeric_state
+  entity_id: sensor.watermeter_3c39e72f9812_active_water_usage
+  above: 0
+  
+action:
+- service: input_number.set_value
+  target:
+    entity_id: input_number.water_start
+  data:
+    value: >
+      {% set total_usage = states('sensor.watermeter_3c39e72f9812_total_water_usage') | float %}
+      {% set total_liters = (total_usage // 1) * 1000 + (total_usage % 1 * 1000) %}
+      {{ total_liters }}
+mode: single

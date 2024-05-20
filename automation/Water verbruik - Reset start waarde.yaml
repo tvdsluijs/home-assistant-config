@@ -1,0 +1,20 @@
+# Automatisering om de startwaarde te resetten als er geen waterverbruik meer is
+alias: "Water verbruik: Reset water startwaarde"
+
+trigger:
+- platform: numeric_state
+  entity_id: sensor.watermeter_3c39e72f9812_active_water_usage
+  below: 0.1  # Gebruik 0.1 om te voorkomen dat afrondingsfouten problemen veroorzaken
+  
+condition:
+- condition: numeric_state
+  entity_id: input_number.water_start
+  above: 0
+  
+action:
+- service: input_number.set_value
+  target:
+    entity_id: input_number.water_start
+  data:
+    value: 0
+mode: single

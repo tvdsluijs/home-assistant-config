@@ -1,0 +1,25 @@
+- platform: template
+  sensors:
+    water_meter_running_total:
+      icon_template: "mdi:gauge"
+      friendly_name: "Water Meter Reading"
+      unit_of_measurement: "m³"
+      value_template: >-
+        {{ ((2538.884-349.356) + states.sensor.watermeter_3c39e72f9812_total_water_usage.state |float) }}
+# laatst opgenomen stand op 10 mei 2538.884
+# verbruik home wizard tot dat moment 349.356     
+    water_verbruik_sinds_start:
+      icon_template: "mdi:gauge"
+      friendly_name: "Verbruik sinds Start"
+      unit_of_measurement: 'liters'
+      value_template: >-
+          {% set total_usage = states('sensor.watermeter_3c39e72f9812_total_water_usage') | float %}
+          {% set total_liters = (total_usage // 1) * 1000 + (total_usage % 1 * 1000) %}
+          {% set start_liters = states('input_number.water_start') | float %}
+          {% if start_liters > 0 %}
+            {{ total_liters - start_liters }}
+          {% else %}
+            0
+          {% endif %}      
+        # {% set start_liters = states('input_number.water_start') | float %}
+        # {{ max(start_liters, 0) | round }}

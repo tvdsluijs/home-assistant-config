@@ -16,6 +16,5 @@
     - 'date_time_iso'    # Local date and time in ISO 8601 format: YYYY-MM-DDTHH:MM:SS
     - 'time_date'        # Local time and date in HH:MM, YYYY-MM-DD format
     - 'time_utc'         # UTC time in HH:MM format
-    - 'beat'             # Internet Time (Swatch .beat time) in @beats
 
 # End of configuration
