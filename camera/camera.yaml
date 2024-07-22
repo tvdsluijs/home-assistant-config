@@ -1,4 +1,3 @@
-
 ### Camera Configuration in Home Assistant
 #
 # Author: Theo van der Sluijs
@@ -10,27 +9,37 @@
 
 # FFmpeg camera for the shed
 - platform: ffmpeg
-  name: SchuurCam  # Name of the camera
-  input: !secret schuurcam  # Input source, URL is stored in secrets.yaml
-
-# FFmpeg camera for the stable
-- platform: ffmpeg
-  name: StalCam  # Name of the camera
-  input: !secret stalcam  # Input source, URL is stored in secrets.yaml
+  name: garage_cam # Name of the camera
+  input: !secret garage_cam # Input source, URL is stored in secrets.yaml
 
 # FFmpeg camera for the doorbell
 - platform: ffmpeg
-  name: Doorbell  # Name of the camera
-  input: !secret doorbel  # Input source, URL is stored in secrets.yaml
+  name: Doorbell # Name of the camera
+  input: !secret doorbel # Input source, URL is stored in secrets.yaml
 
 # FFmpeg camera for the cat
+# - platform: ffmpeg
+#   name: CatCam  # Name of the camera
+#   input: !secret catcam  # Input source, URL is stored in secrets.yaml
+
+# FFmpeg camera for the stable
 - platform: ffmpeg
-  name: CatCam  # Name of the camera
-  input: !secret catcam  # Input source, URL is stored in secrets.yaml
+  name: stal_links_cam # Name of the camera
+  input: !secret stal_links_cam # Input source, URL is stored in secrets.yaml
 
 # Another FFmpeg camera for the stable
 - platform: ffmpeg
-  name: StalCam2  # Name of the camera
-  input: !secret stalcam2  # Input source, URL is stored in secrets.yaml
+  name: stal_rechts_cam # Name of the camera
+  input: !secret stal_rechts_cam # Input source, URL is stored in secrets.yaml
+
+# Another FFmpeg camera for the stable
+- platform: ffmpeg
+  name: stal_rechts_cam # Name of the camera
+  input: !secret stal_rechts_cam # Input source, URL is stored in secrets.yaml
+
+# Another FFmpeg camera for the stable
+- platform: ffmpeg
+  name: in_stal_cam # Name of the camera
+  input: !secret in_stal_cam # Input source, URL is stored in secrets.yaml
 
 # End of configuration
