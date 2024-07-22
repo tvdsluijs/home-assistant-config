@@ -9,14 +9,41 @@
 # and brightness of the plug's LED based on the provided parameters.
 
 
-shelly_rgb:
-    url: 'http://{{ IP_address }}/rpc/'  # URL for the Shelly Plug, using a templated IP address
-    method: POST  # Method for the REST command
-    headers:
-    accept: "application/json, text/html"  # Accept headers for the request
-# Payload to control the RGB LED settings of the Shelly Plug
-    payload: '{"id": {{ range(1,100) | random }},"method": "PLUGS_UI.SetConfig","params": {"config": {"leds": {"mode": "switch","colors": {"switch:0": {"{{ status }}": {"rgb": [{{ color_r }},{{ color_g }},{{ color_b }}],"brightness" :{{ brightness }}}}}}}}}'
-    content_type:  'application/json; charset=utf-8'  # Content type for the request
+# shelly_rgb:
+#     url: 'http://{{ IP_address }}/rpc/'  # URL for the Shelly Plug, using a templated IP address
+#     method: POST  # Method for the REST command
+#     headers:
+#     accept: "application/json, text/html"  # Accept headers for the request
+# # Payload to control the RGB LED settings of the Shelly Plug
+#     payload: '{"id": {{ range(1,100) | random }},"method": "PLUGS_UI.SetConfig","params": {"config": {"leds": {"mode": "switch","colors": {"switch:0": {"{{ status }}": {"rgb": [{{ color_r }},{{ color_g }},{{ color_b }}],"brightness" :{{ brightness }}}}}}}}}'
+#     content_type:  'application/json; charset=utf-8'  # Content type for the request
 
+
+shelly_rgb:
+    url: 'http://{{ IP_address }}/rpc/'
+    method: POST
+    headers:
+      accept: "application/json, text/html"
+    payload: >
+      {
+        "id": {{ range(1,100) | random }},
+        "method": "PLUGS_UI.SetConfig",
+        "params": {
+          "config": {
+            "leds": {
+              "mode": "switch",
+              "colors": {
+                "switch:0": {
+                  "{{ status }}": {
+                    "rgb": [{{ color_r }},{{ color_g }},{{ color_b }}],
+                    "brightness": {{ brightness }}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    content_type: 'application/json; charset=utf-8'
 
 # End of configuration

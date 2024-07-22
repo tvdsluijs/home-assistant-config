@@ -1,0 +1,23 @@
+### Input Text Configuration for Energy and Water uasge
+#
+# Author: Theo van der Sluijs
+# Contact: info@itheo.tech
+#
+# Description: This configuration sets up several input text entities to manage energy and water usage, 
+
+# Input text for gas week usage in JSON
+weekly_gas_usage_json:
+  name: Weekly Gas usage Json
+
+# Input text for power week usage in JSON
+weekly_power_usage_json:
+  name: Weekly Power usage Json
+ 
+# Input text for water week usage in JSON
+weekly_water_usage_json:
+  name: Weekly Water usage Json
+
+weekly_solar_production_json:
+  name: Weekly solar production Json
+
+# End of configuration

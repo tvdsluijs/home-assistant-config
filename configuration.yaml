@@ -33,8 +33,26 @@ default_config:
 # HTTP / HTTPS Configuration
 #================================================================
 http:
+  server_port: 443
   ssl_certificate: /ssl/fullchain.pem  # Path to the SSL certificate
   ssl_key: /ssl/privkey.pem  # Path to the SSL key
+
+#================================================================
+# Telegram Bot
+#================================================================
+telegram_bot:
+  - platform: polling
+    api_key: "7062114886:AAGxgri2hoNJUe-aDoF3u5ZTTqYbUSVVKxA"
+    allowed_chat_ids:
+      - 1348381054
+
+#================================================================
+# Telegram Notifier
+#================================================================
+notify:
+  - platform: telegram
+    name: "theo"
+    chat_id: 1348381054      
 
 #================================================================
 # Text to Speech Configuration
@@ -55,6 +73,7 @@ template: !include templates.yaml  # Includes template configurations
 input_number: !include input/input_number.yaml  # Includes input number configurations
 input_select: !include input/input_select.yaml  # Includes input select configurations
 input_boolean: !include input/input_boolean.yaml  # Includes input boolean configurations
+input_text: !include input/input_text.yaml  # Includes input boolean configurations
 sensor: !include_dir_merge_list sensors/  # Includes sensor configurations from a directory
 binary_sensor: !include_dir_merge_list binary_sensors/  # Includes binary sensor configurations from a directory
 camera: !include_dir_merge_list camera/  # Includes camera configurations from a directory

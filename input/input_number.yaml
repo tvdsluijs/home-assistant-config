@@ -14,6 +14,43 @@ water_start:
   step: 0.1
   mode: box
 
+# Input Number for yesterdays water usage
+yesterdays_solar_production:
+  name: Yesterdays Solar Production
+  initial: 0
+  min: 0
+  max: 100000
+  step: 0.001
+  unit_of_measurement: "kWh"
+
+
+# Input Number for yesterdays water usage
+yesterdays_water_usage:
+  name: Yesterdays Water Usage
+  initial: 0
+  min: 0
+  max: 100000
+  step: 0.001
+  unit_of_measurement: "L"
+
+# Input Number for yesterdays power usage
+yesterdays_power_usage:
+  name: Yesterdays Power Usage
+  initial: 0
+  min: 0
+  max: 100000
+  step: 0.1
+  unit_of_measurement: "kWh"
+
+# Input Number for yesterdays gas usage
+yesterdays_gas_usage:
+  name: Yesterdays Gas Usage
+  initial: 0
+  min: 0
+  max: 100000
+  step: 0.1
+  unit_of_measurement: "m³"
+
 # Input Number for Electricity VAT
 stroom_btw:
   name: stroom_btw

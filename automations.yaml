@@ -7,3 +7,178 @@
     target:
       entity_id: sensor.formatted_received_traffic
     data: {}
+- id: '1716298981733'
+  alias: 'Daily Usage: Record Daily Gas, Power and Water Usage'
+  description: Save daily water, power and gas usage at 23:50
+  trigger:
+  - platform: time
+    at: '23:50:00'
+  action:
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.yesterdays_water_usage
+    data:
+      value: '{{ states(''sensor.water_per_dag'') | float * 1000 }}'
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.yesterdays_power_usage
+    data:
+      value: '{{ states(''sensor.stroom_verbruik_dagelijks'')  | float }}'
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.yesterdays_gas_usage
+    data:
+      value: '{{ states(''sensor.gas_verbruik_dagelijks'')  | float  }}'
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.yesterdays_solar_production
+    data:
+      value: '{{ states(''sensor.sb2_0_1vl_40_081_daily_yield'')  | float / 1000  +
+        states(''sensor.solaredge_energy_today'')  | float / 1000 }}'
+- id: '1716299499767'
+  alias: 'Daily Usage: Record 7 days Gas, Power and Water Usage in JSON'
+  description: Store daily gas, power, and water usage in JSON at 23:59:45
+  trigger:
+  - platform: time
+    at: '23:59:45'
+  action:
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.weekly_water_usage_json
+    data:
+      value: '{% set raw = states(''input_text.weekly_water_usage_json'') %} {% set
+        current_data = raw | from_json if (raw | length > 0 and raw[0] in [''['',
+        ''{'']) else [] %} {% set new_data = ([states(''sensor.water_per_dag'') |
+        float * 1000] + current_data)[:7] %} {{ new_data | to_json }}
+
+        '
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.weekly_power_usage_json
+    data:
+      value: '{% set raw = states(''input_text.weekly_power_usage_json'') %} {% set
+        current_data = raw | from_json if (raw | length > 0 and raw[0] in [''['',
+        ''{'']) else [] %} {% set new_data = ([states(''sensor.stroom_verbruik_dagelijks'')  |
+        float] + current_data)[:7] %} {{ new_data | to_json }}
+
+        '
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.weekly_gas_usage_json
+    data:
+      value: '{% set raw = states(''input_text.weekly_gas_usage_json'') %} {% set
+        current_data = raw | from_json if (raw | length > 0 and raw[0] in [''['',
+        ''{'']) else [] %} {% set new_data = ([states(''sensor.gas_verbruik_dagelijks'')  |
+        float] + current_data)[:7] %} {{ new_data | to_json }}
+
+        '
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.weekly_solar_production_json
+    data:
+      value: '{% set raw = states(''input_text.weekly_solar_production_json'') %}
+        {% set current_data = raw | from_json if (raw | length > 0 and raw[0] in [''['',
+        ''{'']) else [] %} {% set new_data = ([states(''sensor.sb2_0_1vl_40_081_daily_yield'')  |
+        float / 1000  + states(''sensor.solaredge_energy_today'')  | float / 1000]
+        + current_data)[:7] %} {{ new_data | to_json }}
+
+        '
+- id: '1716384339123'
+  alias: 'Notification: Daily OpenAI Weather update'
+  description: ''
+  trigger:
+  - platform: time
+    at: 08:05:00
+  - platform: time
+    at: '12:05:00'
+  - platform: time
+    at: '17:15:00'
+  condition: []
+  action:
+  - service: conversation.process
+    data:
+      agent_id: conversation.openai_conversation
+      text: 'De huidige tijd is {{ now().strftime(''%H:%M'') }}. De weersvooruitzichten
+        zijn: Temperatuur: {{ state_attr(''weather.buienradar'', ''temperature'')
+        }}°C,  Luchtvochtigheid: {{ state_attr(''weather.buienradar'', ''humidity'')
+        }}%, Wind: {{ states(''sensor.windsnelheid'') }} km/h vanuit het {{ states(''sensor.windrichting'')
+        }}, Wolkendekking: {{ states(''sensor.gedetailleerde_staat'') }}, Luchtdruk:
+        {{ state_attr(''weather.buienradar'', ''pressure'') }}, hPa Neerslag: {{states(''sensor.neerslagverwachting_totaal'')}}mm.'
+    response_variable: agent
+  - service: notify.theo
+    data:
+      message: '{{agent.response.speech.plain.speech}}'
+  mode: single
+- id: '1716387576002'
+  alias: 'Notification: Daily Usage update'
+  description: ''
+  trigger:
+  - platform: time
+    at: 08:15:00
+  condition: []
+  action:
+  - service: conversation.process
+    data:
+      agent_id: conversation.openai_conversation_2
+      text: "Je bent een slimme thuis-AI die elke dag een update geeft via een pushmelding
+        (200-400 tekens). Gebruik een luchtige toon voor normaal verbruik en een strenge
+        toon voor grote verschillen (>25%). Analyseer het verbruik van stroom, gas
+        en water van gisteren en vergelijk dit met de laatste 7 dagen. Geef ook de
+        opbrengst van de zonnepanelen. Gebruik JSON-gegevens voor een nauwkeurige
+        vergelijking en geef tips bij grote verschillen. Reageer zoals JARVIS: formeel,
+        beleefd, intelligent, kalm en soms sarcastisch.\nVoorbeeld van de structuur
+        en toon van de melding:\n\n\t1.\tStroomverbruik: Gisteren verbruikte u X kWh
+        stroom, wat in lijn ligt met uw gemiddelde van de afgelopen week. (Of: Uw
+        stroomverbruik was X kWh, een stijging/daling van Y% ten opzichte van het
+        gemiddelde.)\n\t2.\tGasverbruik: Uw gasverbruik was X m³, wat een aanzienlijke
+        stijging/daling van Y% ten opzichte van het gemiddelde is. (Gebruik een strenge
+        toon bij stijgingen >25%).\n\t3.\tWaterverbruik: Waterverbruik bedroeg X liter,
+        een lichte stijging/daling. (Of: Uw waterverbruik was X liter, een stijging/daling
+        van Y% ten opzichte van het gemiddelde.)\n\t4.\tZonnepanelenopbrengst: De
+        zonnepanelenopbrengst was X kWh. (Hier is de toon minder belangrijk omdat
+        de opbrengst afhankelijk is van de zon.)\n\nFormele, beleefde en kalme toon:\n\n\t•\t“Goedemorgen,
+        sir. Gisteren verbruikte u X kWh stroom, in lijn met uw gemiddelde van de
+        afgelopen week.”\n\t•\t“Uw gasverbruik was X m³, een aanzienlijke stijging
+        van Y% ten opzichte van het gemiddelde.”\n\t•\t“Waterverbruik bedroeg X liter,
+        een lichte daling.”\n\t•\t“De zonnepanelenopbrengst was X kWh.”\n\nSarcastische
+        en humoristische opmerkingen bij kleine verschillen:\n\n\t•\t“Sir, uw stroomverbruik
+        van X kWh gisteren was net zo stabiel als een onzichtbaarheidsmantel, mooi
+        werk.”\n\t•\t“Het lijkt erop dat uw gasverbruik gisteren X m³ was, gelukkig
+        geen explosieve stijgingen.”\n\t•\t“Uw waterverbruik van X liter gisteren
+        was net zo kalm als een Zen-tuin, goed gedaan.”\n\nJSON met data:\n\n\n{{
+        states('input_number.yesterdays_power_usage') }} kWh aan stroom gisteren verbruikt.
+        \ {{states('input_text.weekly_power_usage_json')}} JSON array stroom verbuikt.
+        Eerste waarde is van gisteren, alleen gebruiken voor analyse en vergelijking.
+        \ {{states('input_number.yesterdays_gas_usage')}} m3 gas verbruik gisteren.
+        {{states('input_text.weekly_gas_usage_json')}} JSON array gas verbruik. Eerste
+        waarde is van gisteren, alleen gebruiken voor analyse en vergelijking. {{
+        states('input_number.yesterdays_water_usage') | float * 1000 }} liter water
+        verbruik gisteren. {{states('input_text.weekly_water_usage_json')}} JSON array
+        water verbruik. Eerste waarde is van gisteren, alleen gebruiken voor analyse
+        en vergelijking. {{states('input_number.yesterdays_solar_production') }} kWh
+        stroom opgewekt via de zonnepanelen gisteren. {{states('input_text.weekly_solar_production_json')}}
+        JSON array stroom opbrengst. Eerste waarde is van gisteren, alleen gebruiken
+        voor analyse en vergelijking.\n"
+    response_variable: agent
+  - service: notify.theo
+    data:
+      message: '{{agent.response.speech.plain.speech}}'
+  mode: single
+- id: '1721574277258'
+  alias: 'Energie prijzen : Shelly LED Price Color Sequence'
+  description: 'This automation ensures that the Shelly Plug LED color sequence is
+    continuously running by triggering the script every minute.
+
+    '
+  trigger:
+  - platform: time_pattern
+    minutes: /1
+  condition: []
+  action:
+  - service: script.turn_on
+    target:
+      entity_id: script.shelly_led_color_sequence
+    data:
+      variables:
+        IP_address: 192.168.1.254
+  mode: single
