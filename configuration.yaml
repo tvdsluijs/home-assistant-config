@@ -14,15 +14,15 @@
 # Main configuration section for Home Assistant
 #===============================================================
 homeassistant:
-  customize: !include customize.yaml  # Includes customizations for entities
+  customize: !include customize.yaml # Includes customizations for entities
   allowlist_external_dirs:
-      - "/config"  # Whitelists the /config directory for external file access
+    - "/config" # Whitelists the /config directory for external file access
 
 #===============================================================
 # Frontend configuration
 #===============================================================
 frontend:
-  themes: !include_dir_merge_named themes  # Includes themes for the frontend
+  themes: !include_dir_merge_named themes # Includes themes for the frontend
 
 #===============================================================
 # Default configuration for Home Assistant (frontend, api, etc)
@@ -34,15 +34,15 @@ default_config:
 #================================================================
 http:
   server_port: 443
-  ssl_certificate: /ssl/fullchain.pem  # Path to the SSL certificate
-  ssl_key: /ssl/privkey.pem  # Path to the SSL key
+  ssl_certificate: /ssl/fullchain.pem # Path to the SSL certificate
+  ssl_key: /ssl/privkey.pem # Path to the SSL key
 
 #================================================================
 # Telegram Bot
 #================================================================
 telegram_bot:
   - platform: polling
-    api_key: "7062114886:AAGxgri2hoNJUe-aDoF3u5ZTTqYbUSVVKxA"
+    api_key: !secret telegram_bot_api_key
     allowed_chat_ids:
       - 1348381054
 
@@ -52,57 +52,57 @@ telegram_bot:
 notify:
   - platform: telegram
     name: "theo"
-    chat_id: 1348381054      
+    chat_id: !secret telegram_chat_id
 
 #================================================================
 # Text to Speech Configuration
 #================================================================
 tts:
-  - platform: google_translate  # Uses Google Translate for text-to-speech
-    language: 'nl'  # Sets the language to Dutch
+  - platform: google_translate # Uses Google Translate for text-to-speech
+    language: "nl" # Sets the language to Dutch
 
 #===============================================================
 ## Includes for Organizing Configuration Files
 #===============================================================
-group: !include groups.yaml  # Includes group configurations
-automation: !include automations.yaml  # Includes automation configurations
-automation mine: !include_dir_list automation/  # Includes additional automations from a directory
-script: !include scripts.yaml  # Includes script configurations
-scene: !include scenes.yaml  # Includes scene configurations
-template: !include templates.yaml  # Includes template configurations
-input_number: !include input/input_number.yaml  # Includes input number configurations
-input_select: !include input/input_select.yaml  # Includes input select configurations
-input_boolean: !include input/input_boolean.yaml  # Includes input boolean configurations
-input_text: !include input/input_text.yaml  # Includes input boolean configurations
-sensor: !include_dir_merge_list sensors/  # Includes sensor configurations from a directory
-binary_sensor: !include_dir_merge_list binary_sensors/  # Includes binary sensor configurations from a directory
-camera: !include_dir_merge_list camera/  # Includes camera configurations from a directory
+group: !include groups.yaml # Includes group configurations
+automation: !include automations.yaml # Includes automation configurations
+automation mine: !include_dir_list automation/ # Includes additional automations from a directory
+script: !include scripts.yaml # Includes script configurations
+scene: !include scenes.yaml # Includes scene configurations
+template: !include templates.yaml # Includes template configurations
+input_number: !include input/input_number.yaml # Includes input number configurations
+input_select: !include input/input_select.yaml # Includes input select configurations
+input_boolean: !include input/input_boolean.yaml # Includes input boolean configurations
+input_text: !include input/input_text.yaml # Includes input boolean configurations
+sensor: !include_dir_merge_list sensors/ # Includes sensor configurations from a directory
+binary_sensor: !include_dir_merge_list binary_sensors/ # Includes binary sensor configurations from a directory
+camera: !include_dir_merge_list camera/ # Includes camera configurations from a directory
 # rest_command: !include_dir_merge_list rest_commands/  # Includes REST command configurations from a directory
 # shell_command: !include_dir_merge_list shell_commands/  # Includes shell command configurations from a directory
 # utility_meter: !include utility_meter/utility.yaml  # Includes utility meter configurations (commented out for testing)
 
 rest_command:
   shelly_rgb:
-    url: 'http://{{ IP_address }}/rpc/'
+    url: "http://{{ IP_address }}/rpc/"
     method: POST
     headers:
       accept: "application/json, text/html"
     payload: '{"id": {{ range(1,100) | random }},"method": "PLUGS_UI.SetConfig","params": {"config": {"leds": {"mode": "switch","colors": {"switch:0": {"{{ status }}": {"rgb": [{{ color_r }},{{ color_g }},{{ color_b }}],"brightness" :{{ brightness }}}}}}}}}'
-    content_type:  'application/json; charset=utf-8'
+    content_type: "application/json; charset=utf-8"
 
 shell_command:
   ntfy: >
-      curl
-      -X POST
-      --url 'https://ntfy.sh/{{ topic }}'
-      --data '{{ message }}'
-      --header 'X-Title: {{ title }}'
-      --header 'X-Tags: {{ tags }}'
-      --header 'X-Priority: {{ priority }}'
-      --header 'X-Delay: {{ delay }}'
-      --header 'X-Actions: {{ actions }}'
-      --header 'X-Markdown: {{ markdown }}'
-      --header 'X-Click: {{ click }}'
-      --header 'X-Icon: {{ icon }}'
+    curl
+    -X POST
+    --url 'https://ntfy.sh/{{ topic }}'
+    --data '{{ message }}'
+    --header 'X-Title: {{ title }}'
+    --header 'X-Tags: {{ tags }}'
+    --header 'X-Priority: {{ priority }}'
+    --header 'X-Delay: {{ delay }}'
+    --header 'X-Actions: {{ actions }}'
+    --header 'X-Markdown: {{ markdown }}'
+    --header 'X-Click: {{ click }}'
+    --header 'X-Icon: {{ icon }}'
 
 # End of configuration
