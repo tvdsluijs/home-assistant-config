@@ -15,7 +15,7 @@
 # out of, or in connection with the software or the use or other dealings in the software.
 #
 # This script creates sensors to retrieve and display electricity prices for the current and next hours
-# using the Nord Pool API in Home Assistant. It adjusts the LED color of a Shelly Plug based on the 
+# using the Nord Pool API in Home Assistant. It adjusts the LED color of a Shelly Plug based on the
 # current electricity price, indicating the cost visually.
 #
 # 1. Creates template sensors for current and next hour electricity prices, as well as the minimum
@@ -29,44 +29,44 @@
 - platform: template
   sensors:
     current_price:
-        friendly_name: "Current Hour Price"
-        value_template: >
-          {% set now = now().replace(minute=0, second=0, microsecond=0) %}
-          {% set prices = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
-          {% for price in prices %}
-            {% if price.start == now %}
-              {{ price.value }}
-            {% endif %}
-          {% endfor %}
-        unit_of_measurement: "EUR/kWh"
+      friendly_name: "Current Hour Price"
+      value_template: >
+        {% set now = now().replace(minute=0, second=0, microsecond=0) %}
+        {% set prices = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
+        {% for price in prices %}
+          {% if price.start == now %}
+            {{ price.value }}
+          {% endif %}
+        {% endfor %}
+      unit_of_measurement: "EUR/kWh"
 
     next_hour_price:
-        friendly_name: "Next Hour Price"
-        value_template: >
-          {% set now = now().replace(minute=0, second=0, microsecond=0) %}
-          {% set next_hour = now + timedelta(hours=1) %}
-          {% set prices = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
-          {% for price in prices %}
-            {% if price.start == next_hour %}
-              {{ price.value }}
-            {% endif %}
-          {% endfor %}
-        unit_of_measurement: "EUR/kWh"
+      friendly_name: "Next Hour Price"
+      value_template: >
+        {% set now = now().replace(minute=0, second=0, microsecond=0) %}
+        {% set next_hour = now + timedelta(hours=1) %}
+        {% set prices = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
+        {% for price in prices %}
+          {% if price.start == next_hour %}
+            {{ price.value }}
+          {% endif %}
+        {% endfor %}
+      unit_of_measurement: "EUR/kWh"
 
     min_price_today:
       friendly_name: "Minimum Price Today"
       value_template: >
-          {% set now = now().replace(minute=0, second=0, microsecond=0) %}
-          {% set prices = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
-          {% set future_prices = prices | selectattr('start', '>=', now) | map(attribute='value') | list %}
-          {{ future_prices | min }}
+        {% set now = now().replace(minute=0, second=0, microsecond=0) %}
+        {% set prices = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
+        {% set future_prices = prices | selectattr('start', '>=', now) | map(attribute='value') | list %}
+        {{ future_prices | min }}
       unit_of_measurement: "EUR/kWh"
 
     max_price_today:
       friendly_name: "Maximum Price Today"
       value_template: >
-          {% set now = now().replace(minute=0, second=0, microsecond=0) %}
-          {% set prices = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
-          {% set future_prices = prices | selectattr('start', '>=', now) | map(attribute='value') | list %}
-          {{ future_prices | max }}
+        {% set now = now().replace(minute=0, second=0, microsecond=0) %}
+        {% set prices = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
+        {% set future_prices = prices | selectattr('start', '>=', now) | map(attribute='value') | list %}
+        {{ future_prices | max }}
       unit_of_measurement: "EUR/kWh"
