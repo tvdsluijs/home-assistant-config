@@ -28,30 +28,27 @@ condition:
 
 # Actions to perform if the condition is met
 action:
-  - service: notify.mobile_app_iphone_van_theo
-    data:
-      title: Stroom onder nul
-      message: >
+  - variables:
+      formatted_message: >-
         Om {{((now().timestamp()|int) +3600) | timestamp_custom("%H:00")}} gaat
         de Inkoop 💡 prijs naar €
         {{states('sensor.next_hour_price')| | round(3)}}
+  - service: notify.mobile_app_iphone_van_theo
+    data:
+      title: Stroom onder nul
+      message: "{{ formatted_message }}"
+
       data:
         push:
           sound: claire-enhanced-de-stroomprijs-gaat-onder-nul.wav
   - service: persistent_notification.create
     data:
       title: Stroom onder nul
-      message: >
-        Om {{((now().timestamp()|int) +3600) | timestamp_custom("%H:00")}} gaat
-        de Inkoop 💡 prijs naar €
-        {{states('sensor.next_hour_price')| | round(3)}}
+      message: "{{ formatted_message }}"
   - service: notify.notify
     data:
       title: Stroom onder nul
-      message: >
-        Om {{((now().timestamp()|int) +3600) | timestamp_custom("%H:00")}} gaat
-        de Inkoop 💡 prijs naar €
-        {{states('sensor.next_hour_price')| | round(3)}}
+      message: "{{ formatted_message }}"
 
 mode: single # The automation runs in single mode (does not queue multiple instances)
 
