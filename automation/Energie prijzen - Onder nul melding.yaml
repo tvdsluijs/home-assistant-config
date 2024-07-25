@@ -30,9 +30,8 @@ condition:
 action:
   - variables:
       formatted_message: >-
-        Om {{((now().timestamp()|int) +3600) | timestamp_custom("%H:00")}} gaat
-        de Inkoop 💡 prijs naar €
-        {{states('sensor.next_hour_price')| | round(3)}}
+        Om {{ ((now().timestamp() | int) + 3600) | timestamp_custom("%H:00") }} gaat
+        de Inkoop 💡 prijs naar € {{ states('sensor.next_hour_price') | round(3) }}
   - service: notify.mobile_app_iphone_van_theo
     data:
       title: Stroom onder nul
