@@ -2,24 +2,24 @@
 #
 # Author: Theo van der Sluijs
 # Contact: info@itheo.tech
-# Description: This automation updates the LED color of a Shelly Plug every hour to reflect the current energy price. 
+# Description: This automation updates the LED color of a Shelly Plug every hour to reflect the current energy price.
 # The color changes are based on the price relative to the day's minimum and maximum, providing a visual indicator of energy costs.
 
-alias: 'Energie prijzen : Wijzig Shelly Plug Led kleuren'  # Name of the automation
-description: 'Deze automatisering werkt de LED-kleur van een Shelly Plug elk uur bij om de huidige energieprijs weer te geven. De kleurveranderingen zijn gebaseerd op de prijs ten opzichte van het minimum en maximum van de dag, wat een visuele indicatie geeft van de energiekosten.'  # Description of the automation
+alias: "Energie prijzen : Wijzig Shelly Plug Led kleuren" # Name of the automation
+description: "Deze automatisering werkt de LED-kleur van een Shelly Plug elk uur bij om de huidige energieprijs weer te geven. De kleurveranderingen zijn gebaseerd op de prijs ten opzichte van het minimum en maximum van de dag, wat een visuele indicatie geeft van de energiekosten." # Description of the automation
 
 # Trigger for the automation
 trigger:
   - platform: time_pattern
-    hours: "*"  # Every hour
+    hours: "*" # Every hour
 
-condition: []  # No conditions are set for this automation
+condition: [] # No conditions are set for this automation
 
 # Actions to perform when the automation is triggered
 action:
   - service: rest_command.shelly_rgb
     data:
-      IP_address: 192.168.11.218  # IP address of the Shelly Plug
+      IP_address: 192.168.1.254 # IP address of the Shelly Plug
       status: "on"
       # Template logic to determine the colors based on energy price
       color_r: >
@@ -32,7 +32,7 @@ action:
         {% else %}
           {% set scaled_price = ((price - min_price) / (max_price - min_price)) * 100 %}
           {{ scaled_price }}
-        {% endif %}        
+        {% endif %}
       color_g: >
         {% set price = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0',
         'current_price')|float %} {% set min_price =
@@ -43,7 +43,7 @@ action:
         {% else %}
           {% set scaled_price = ((price - min_price) / (max_price - min_price)) * 100 %}
           {{ 100 - scaled_price }}
-        {% endif %}        
+        {% endif %}
       color_b: >
         {% set price = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0',
         'current_price')|float %} {% if price < 0 %}
@@ -51,13 +51,13 @@ action:
           {{ [scaled_blue, 100]|min }}
         {% else %}
           0
-        {% endif %}        
-      brightness: "80"  # Set brightness to 80%
+        {% endif %}
+      brightness: "80" # Set brightness to 80%
   - service: rest_command.shelly_rgb
     data:
-      IP_address: 192.168.11.218  # Repeats for turning off the LED with different settings
+      IP_address: 192.168.1.254 # Repeats for turning off the LED with different settings
       status: "off"
-      # Template logic to determine the colors based on energy price      
+      # Template logic to determine the colors based on energy price
       color_r: >
         {% set price = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0',
         'current_price')|float %} {% set min_price =
@@ -68,7 +68,7 @@ action:
         {% else %}
           {% set scaled_price = ((price - min_price) / (max_price - min_price)) * 100 %}
           {{ scaled_price }}
-        {% endif %}        
+        {% endif %}
       color_g: >
         {% set price = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0',
         'current_price')|float %} {% set min_price =
@@ -79,7 +79,7 @@ action:
         {% else %}
           {% set scaled_price = ((price - min_price) / (max_price - min_price)) * 100 %}
           {{ 100 - scaled_price }}
-        {% endif %}        
+        {% endif %}
       color_b: >
         {% set price = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0',
         'current_price')|float %} {% if price < 0 %}
@@ -87,9 +87,9 @@ action:
           {{ [scaled_blue, 100]|min }}
         {% else %}
           0
-        {% endif %}      
-      brightness: "40"  # Set brightness to 40%
+        {% endif %}
+      brightness: "40" # Set brightness to 40%
 
-mode: single  # The automation runs in single mode (does not queue multiple instances)
+mode: single # The automation runs in single mode (does not queue multiple instances)
 
 # End of configuration
