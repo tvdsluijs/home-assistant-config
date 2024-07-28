@@ -32,11 +32,11 @@ shelly_rgb:
             "switch:0": {
               "on": {
                 "rgb": [{{ color_r }},{{ color_g }},{{ color_b }}],
-                "brightness": {{ brightness }}
+                "brightness": 100
               },
               "off": {
                 "rgb": [{{ color_r }},{{ color_g }},{{ color_b }}],
-                "brightness": {{ brightness }}
+                "brightness": 50
               }
             }
           }
