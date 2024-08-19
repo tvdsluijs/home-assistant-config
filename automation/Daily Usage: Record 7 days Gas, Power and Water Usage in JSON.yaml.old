@@ -1,0 +1,46 @@
+alias: "Daily Usage: Record 7 days Gas, Power and Water Usage in JSON"
+description: Store daily gas, power, and water usage in JSON at 23:59:45
+trigger:
+  - platform: time
+    at: "23:59:45"
+action:
+  - target:
+      entity_id: input_text.weekly_water_usage_json
+    data:
+      value: >
+        {% set raw = states('input_text.weekly_water_usage_json') %} {% set
+        current_data = raw | from_json if (raw | length > 0 and raw[0] in ['[',
+        '{']) else [] %} {% set new_data = ([states('sensor.water_per_dag') |
+        float * 1000] + current_data)[:7] %} {{ new_data | to_json }}
+    action: input_text.set_value
+  - target:
+      entity_id: input_text.weekly_power_usage_json
+    data:
+      value: >
+        {% set raw = states('input_text.weekly_power_usage_json') %} {% set
+        current_data = raw | from_json if (raw | length > 0 and raw[0] in ['[',
+        '{']) else [] %} {% set new_data =
+        ([states('sensor.stroom_verbruik_dagelijks')  | float] +
+        current_data)[:7] %} {{ new_data | to_json }}
+    action: input_text.set_value
+  - target:
+      entity_id: input_text.weekly_gas_usage_json
+    data:
+      value: >
+        {% set raw = states('input_text.weekly_gas_usage_json') %} {% set
+        current_data = raw | from_json if (raw | length > 0 and raw[0] in ['[',
+        '{']) else [] %} {% set new_data =
+        ([states('sensor.gas_verbruik_dagelijks')  | float] + current_data)[:7]
+        %} {{ new_data | to_json }}
+    action: input_text.set_value
+  - target:
+      entity_id: input_text.weekly_solar_production_json
+    data:
+      value: >
+        {% set raw = states('input_text.weekly_solar_production_json') %} {% set
+        current_data = raw | from_json if (raw | length > 0 and raw[0] in ['[',
+        '{']) else [] %} {% set new_data =
+        ([states('sensor.sb2_0_1vl_40_081_daily_yield')  | float / 1000  +
+        states('sensor.solaredge_energy_today')  | float / 1000] +
+        current_data)[:7] %} {{ new_data | to_json }}
+    action: input_text.set_value

@@ -26,20 +26,17 @@ condition:
 action:
   - variables:
       formatted_message: >-
-        Afval morgen: {{states.sensor.afvalinfo_home_trash_type_tomorrow.state}}
-  - service: notify.mobile_app_iphone_van_theo
-    data:
-      title: Afval morgen
-      message: "{{ formatted_message }}"
+        {{states.sensor.afvalinfo_home_trash_type_tomorrow.state}}
+    # - service: notify.mobile_app_iphone_van_theo
+    #   data:
+    #     title: Afval morgen
+    #     message: "{{ formatted_message }}"
+    formatted_title: >-
+      🗑️ Afval morgen
   - service: persistent_notification.create
     data:
       title: Afval morgen
       message: "{{ formatted_message }}"
-  # - service: shell_command.ntfy
-  #   data:
-  #     topic: tvdsluijs_afval
-  #     title: Afval morgen
-  #     message: "{{ formatted_message }}"
   - service: notify.notify
     data:
       title: Afval morgen

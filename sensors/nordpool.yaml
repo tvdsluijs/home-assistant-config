@@ -8,12 +8,12 @@
 
 # NordPool sensor to fetch electricity price data
 - platform: nordpool
-  region: "NL"  # Region set to the Netherlands
-  currency: "EUR"  # Currency set to Euro
-  VAT: False  # Value-Added Tax not included
-  precision: 5  # Precision set to 5 decimal places
-  price_in_cents: false  # Prices are not in cents
-  price_type: kWh  # Price type set to per kilowatt-hour
+  region: "NL" # Region set to the Netherlands
+  currency: "EUR" # Currency set to Euro
+  VAT: False # Value-Added Tax not included
+  precision: 5 # Precision set to 5 decimal places
+  price_in_cents: false # Prices are not in cents
+  price_type: kWh # Price type set to per kilowatt-hour
 
 # Template sensors for NordPool data
 
@@ -31,7 +31,7 @@
         {% set next_iso_time = (next_timestamp|timestamp_custom("%Y-%m-%d %H:00:00+01:00", True)) %}
         {% set raw_today = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
         {% set price = None %}
-        
+
         {% for entry in raw_today %}
           {% set entry_start = entry.start | string  %}
           {% if entry_start == next_iso_time %}
@@ -41,6 +41,58 @@
         {% endfor %}
         {% if data.prices %}
           {{ data.prices[0] }}
+        {% else %}
+          No data for today
+        {% endif %}
+
+# Template to determine the minimum electricity price from the current hour until the end of the day
+- platform: template
+  sensors:
+    stroom_prijs_minimum_vandaag:
+      icon_template: "mdi:arrow-down-bold"
+      friendly_name: "Minimum stroom prijs vanaf nu"
+      unit_of_measurement: "€/kWh"
+      value_template: >-
+        {% set current_timestamp = now().timestamp() %}
+        {% set current_iso_time = (current_timestamp|timestamp_custom("%Y-%m-%d %H:00:00+01:00", True)) %}
+        {% set raw_today = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
+        {% set prices = [] %}
+
+        {% for entry in raw_today %}
+          {% set entry_start = entry.start | string %}
+          {% if entry_start >= current_iso_time %}
+            {% set prices = prices + [entry.value] %}
+          {% endif %}
+        {% endfor %}
+
+        {% if prices %}
+          {{ prices | min }}
+        {% else %}
+          No data for today
+        {% endif %}
+
+# Template to determine the maximum electricity price from the current hour until the end of the day
+- platform: template
+  sensors:
+    stroom_prijs_maximum_vandaag:
+      icon_template: "mdi:arrow-up-bold"
+      friendly_name: "Maximum stroom prijs vanaf nu"
+      unit_of_measurement: "€/kWh"
+      value_template: >-
+        {% set current_timestamp = now().timestamp() %}
+        {% set current_iso_time = (current_timestamp|timestamp_custom("%Y-%m-%d %H:00:00+01:00", True)) %}
+        {% set raw_today = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
+        {% set prices = [] %}
+
+        {% for entry in raw_today %}
+          {% set entry_start = entry.start | string %}
+          {% if entry_start >= current_iso_time %}
+            {% set prices = prices + [entry.value] %}
+          {% endif %}
+        {% endfor %}
+
+        {% if prices %}
+          {{ prices | max }}
         {% else %}
           No data for today
         {% endif %}

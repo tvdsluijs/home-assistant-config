@@ -19,16 +19,14 @@ condition: [] # No conditions are set for this automation
 action:
   - variables:
       formatted_message: >-
-        Inkoop prijs {{ now().strftime("%d %b `%y") }}
-
-        💡 laagste €. {{state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'min') | round(3)}} / kWh
-
-        💡 hoogste €. {{state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'max') | round(3)}} / kWh
-
+        💡 laagste €. {{sensor.stroom_prijs_laagste_all_in}} ({{state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'min') | round(3)}}) / kWh
+        💡 hoogste €. {{sensor.stroom_prijs_hoogste_all_in}} ({{state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'max') | round(3)}}) / kWh
         🔥 Na 06u €. {{states('sensor.huidige_gas_prijs_inkoop') | round(3)}} / m3
+      formatted_title: >-
+        💶 Energie prijs {{ now().strftime("%d %b `%y") }}
   - service: notify.mobile_app_iphone_van_theo
     data:
-      title: Ochtend prijzen melding
+      title: "{{formatted_title}}"
       message: "{{ formatted_message }}"
       data:
         url: /lovelace/energie-prijzen
@@ -37,7 +35,7 @@ action:
           sound: claire-enhanced-goedemorgen-hier-is-je-dagelijkse-energie-prijs-overzicht.wav
   - service: persistent_notification.create
     data:
-      title: Ochtend prijzen melding
+      title: "{{formatted_title}}"
       message: "{{ formatted_message }}"
       data:
         url: /lovelace/energie-prijzen

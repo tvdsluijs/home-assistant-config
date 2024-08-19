@@ -1,0 +1,28 @@
+alias: "Daily Usage: Record Daily Gas, Power and Water Usage"
+description: Save daily water, power and gas usage at 23:50
+trigger:
+  - platform: time
+    at: "23:50:00"
+action:
+  - target:
+      entity_id: input_number.yesterdays_water_usage
+    data:
+      value: "{{ states('sensor.water_per_dag') | float * 1000 }}"
+    action: input_number.set_value
+  - target:
+      entity_id: input_number.yesterdays_power_usage
+    data:
+      value: "{{ states('sensor.stroom_verbruik_dagelijks')  | float }}"
+    action: input_number.set_value
+  - target:
+      entity_id: input_number.yesterdays_gas_usage
+    data:
+      value: "{{ states('sensor.gas_verbruik_dagelijks')  | float  }}"
+    action: input_number.set_value
+  - target:
+      entity_id: input_number.yesterdays_solar_production
+    data:
+      value: >-
+        {{ states('sensor.sb2_0_1vl_40_081_daily_yield')  | float / 1000  +
+        states('sensor.solaredge_energy_today')  | float / 1000 }}
+    action: input_number.set_value

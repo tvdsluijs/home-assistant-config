@@ -1,0 +1,28 @@
+alias: "Notification: Daily OpenAI Weather update"
+description: ""
+trigger:
+  - platform: time
+    at: "08:05:00"
+  - platform: time
+    at: "12:05:00"
+  - platform: time
+    at: "17:15:00"
+condition: []
+action:
+  - data:
+      agent_id: conversation.openai_conversation
+      text: >-
+        De huidige tijd is {{ now().strftime('%H:%M') }}. De weersvooruitzichten
+        zijn: Temperatuur: {{ state_attr('weather.buienradar', 'temperature')
+        }}°C,  Luchtvochtigheid: {{ state_attr('weather.buienradar', 'humidity')
+        }}%, Wind: {{ states('sensor.windsnelheid') }} km/h vanuit het {{
+        states('sensor.windrichting') }}, Wolkendekking: {{
+        states('sensor.gedetailleerde_staat') }}, Luchtdruk: {{
+        state_attr('weather.buienradar', 'pressure') }}, hPa Neerslag:
+        {{states('sensor.neerslagverwachting_totaal')}}mm.
+    response_variable: agent
+    action: conversation.process
+  - data:
+      message: "{{agent.response.speech.plain.speech}}"
+    action: notify.telegram
+mode: single
