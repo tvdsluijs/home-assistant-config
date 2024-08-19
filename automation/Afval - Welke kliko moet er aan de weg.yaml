@@ -27,12 +27,12 @@ action:
   - variables:
       formatted_message: >-
         {{states.sensor.afvalinfo_home_trash_type_tomorrow.state}}
-    # - service: notify.mobile_app_iphone_van_theo
-    #   data:
-    #     title: Afval morgen
-    #     message: "{{ formatted_message }}"
-    formatted_title: >-
-      🗑️ Afval morgen
+      # - service: notify.mobile_app_iphone_van_theo
+      #   data:
+      #     title: Afval morgen
+      #     message: "{{ formatted_message }}"
+      formatted_title: >-
+        🗑️ Afval morgen
   - service: persistent_notification.create
     data:
       title: Afval morgen

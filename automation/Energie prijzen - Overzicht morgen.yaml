@@ -36,9 +36,6 @@ action:
         {% set raw_today = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
         ```
         {% for i in range(12) %}
-        {% set raw_today = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
-        ```
-        {% for i in range(12) %}
         € {{ '%0.3f' | format(raw_today[i].value) | replace('.', ',') }} - {{ raw_today[i].start.strftime('%H:%M') }}\t\t€ {{ '%0.3f' | format(raw_today[i+12].value) | replace('.', ',') }} - {{ raw_today[i+12].start.strftime('%H:%M') }}
         {% endfor %}
         ```
