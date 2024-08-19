@@ -105,7 +105,7 @@
         }}, Wolkendekking: {{ states(''sensor.gedetailleerde_staat'') }}, Luchtdruk:
         {{ state_attr(''weather.buienradar'', ''pressure'') }}, hPa Neerslag: {{states(''sensor.neerslagverwachting_totaal'')}}mm.'
     response_variable: agent
-  - service: notify.theo
+  - service: notify.telegram
     data:
       message: '{{agent.response.speech.plain.speech}}'
   mode: single
@@ -160,7 +160,7 @@
         JSON array stroom opbrengst. Eerste waarde is van gisteren, alleen gebruiken
         voor analyse en vergelijking.\n"
     response_variable: agent
-  - service: notify.theo
+  - service: notify.telegram
     data:
       message: '{{agent.response.speech.plain.speech}}'
   mode: single
@@ -172,13 +172,84 @@
     '
   trigger:
   - platform: time_pattern
-    minutes: /1
+    seconds: '0'
+  - platform: time_pattern
+    seconds: '30'
   condition: []
   action:
   - service: script.turn_on
     target:
-      entity_id: script.shelly_led_color_sequence
+      entity_id: script.shelly_led_color_sequence_duplicate
     data:
       variables:
         IP_address: 192.168.1.254
+  mode: single
+- id: '1723811960246'
+  alias: 'Energie prijzen : Onder nul melding'
+  description: Deze automatisering geeft een melding wanneer de aankoopprijs van elektriciteit
+    naar verwachting onder de 0,001 zal dalen.
+  trigger:
+  - platform: time_pattern
+    hours: '*'
+    minutes: '2'
+  condition:
+  - condition: time
+    after: 06:00:00
+    before: '23:00:00'
+  - condition: numeric_state
+    entity_id: sensor.next_hour_price
+    below: 0.001
+    attribute: price
+  action:
+  - variables:
+      formatted_message: "Om {{ ((now().timestamp() | int) + 3600) | timestamp_custom(\"%H:00\")
+        }} gaat de Inkoop \U0001F4A1 prijs naar € {{ states('sensor.next_hour_price')
+        | round(3) }}"
+  - data:
+      title: Stroom onder nul
+      message: '{{ formatted_message }}'
+      data:
+        push:
+          sound: claire-enhanced-de-stroomprijs-gaat-onder-nul.wav
+    action: notify.mobile_app_iphone_van_theo
+  - data:
+      message: '{{ formatted_message }}'
+    action: notify.telegram
+  mode: single
+- id: '1724050146258'
+  alias: Test Automation
+  description: ''
+  trigger:
+  - platform: time
+    at: 08:00:00
+  condition: []
+  action:
+  - data:
+      title: "\U0001F6A7 Home Assistant update \U0001F389"
+      message: '**Bold Text**
+
+        _Italic Text_
+
+        A [clickable link](https://example.com)
+
+        - Line one
+
+        - Line two
+
+        ```
+
+        | Device | Status | Battery |
+
+        |--------|--------|---------|
+
+        | Sensor 1 | Active | 85% |
+
+        | Sensor 2 | Inactive | 70% |
+
+        | Sensor 3 | Active | 90% |
+
+        ```
+
+        '
+    action: notify.telegram
   mode: single

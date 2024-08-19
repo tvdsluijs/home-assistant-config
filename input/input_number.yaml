@@ -68,7 +68,7 @@ stroom_energie_belasting:
 # Input Number for Electricity Energy Storage
 stroom_energie_opslag:
   name: stroom_energie_opslag
-  initial: 0.0175  # Initial value for electricity energy storage
+  initial: 0.04  # Initial value for electricity energy storage
   min: 0
   max: 100000
 
@@ -89,7 +89,7 @@ gas_energie_belasting:
 # Input Number for Gas Energy Storage
 gas_energie_opslag:
   name: gas_energie_opslag
-  initial: 0.06842975207  # Initial value for gas energy storage
+  initial: 0.04885  # Initial value for gas energy storage
   min: 0
   max: 100000
 

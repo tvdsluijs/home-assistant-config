@@ -40,18 +40,26 @@ http:
 #================================================================
 # Telegram Bot
 #================================================================
+# telegram_bot:
+#   - platform: polling
+#     api_key: !secret telegram_bot_api_key
+#     allowed_chat_ids:
+#       - !secret telegram_chat_id
+
 telegram_bot:
   - platform: polling
     api_key: !secret telegram_bot_api_key
     allowed_chat_ids:
-      - 1348381054
+      - !secret telegram_chat_id
+    parse_mode: MarkdownV2  # Default or your preferred mode for responses to commands
+
 
 #================================================================
 # Telegram Notifier
 #================================================================
 notify:
   - platform: telegram
-    name: "theo"
+    name: telegram
     chat_id: !secret telegram_chat_id
 
 #================================================================
@@ -83,26 +91,29 @@ camera: !include_dir_merge_list camera/ # Includes camera configurations from a 
 
 rest_command:
   shelly_rgb:
-    url: "http://{{ IP_address }}/rpc/"
-    method: POST
+    url: >
+        http://{{ IP_address }}/rpc/PLUGS_UI.SetConfig?config={"leds":{"mode":"switch","colors":{"switch:0":{"on":{"rgb":[{{ color_r }},{{ color_g }},{{ color_b }}],"brightness":100},"off":{"rgb":[{{ color_r }},{{ color_g }},{{ color_b }}],"brightness":50}}}}}
+    method: GET
     headers:
-      accept: "application/json, text/html"
-    payload: '{"id": {{ range(1,100) | random }},"method": "PLUGS_UI.SetConfig","params": {"config": {"leds": {"mode": "switch","colors": {"switch:0": {"{{ status }}": {"rgb": [{{ color_r }},{{ color_g }},{{ color_b }}],"brightness" :{{ brightness }}}}}}}}}'
-    content_type: "application/json; charset=utf-8"
+      accept: 'application/json'
+    content_type: 'application/json'
 
 shell_command:
-  ntfy: >
-    curl
-    -X POST
-    --url 'https://ntfy.sh/{{ topic }}'
-    --data '{{ message }}'
-    --header 'X-Title: {{ title }}'
-    --header 'X-Tags: {{ tags }}'
-    --header 'X-Priority: {{ priority }}'
-    --header 'X-Delay: {{ delay }}'
-    --header 'X-Actions: {{ actions }}'
-    --header 'X-Markdown: {{ markdown }}'
-    --header 'X-Click: {{ click }}'
-    --header 'X-Icon: {{ icon }}'
+    ntfy: >
+        # The curl command to send a POST request to the Ntfy service
+        curl
+        -X POST
+        --url 'https://ntfy.sh/{{ topic }}'  # URL with a templated topic for the notification
+        --data '{{ message }}'  # The message content of the notification
+        --header 'X-Title: {{ title }}'  # Header for specifying the notification title
+        --header 'X-Tags: {{ tags }}'  # Header for specifying tags associated with the notification
+        --header 'X-Priority: {{ priority }}'  # Header for setting the priority of the notification
+        --header 'X-Delay: {{ delay }}'  # Header for specifying any delay before the notification is sent
+        --header 'X-Actions: {{ actions }}'  # Header for specifying actions associated with the notification
+        --header 'X-Markdown: {{ markdown }}'  # Header to enable Markdown formatting in the notification
+        --header 'X-Click: {{ click }}'  # Header for specifying a URL to open when the notification is clicked
+        --header 'X-Icon: {{ icon }}'  # Header for specifying an icon for the notification
+
+
 
 # End of configuration

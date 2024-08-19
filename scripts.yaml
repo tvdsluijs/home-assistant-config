@@ -1,163 +1,238 @@
 send_tts_to_iphone:
   alias: Send TTS to iPhone
   sequence:
-    - service: tts.google_translate_say
-      metadata: {}
-      data_template:
-        entity_id: "{{ media_player }}"
-        message: "{{ message }}"
-
-# --------------------------------------------------------------------------------
-# @Author: Theo van der Sluijs
-# @Contact: theo@vandersluijs.nl
-#
-# Website: https://itheo.tech
-#
-# Copyright © 2024 Theo van der Sluijs.
-#
-# License: MIT
-#
-# Disclaimer: This software is provided "as is", without warranty of any kind, express or implied,
-# including but not limited to the warranties of merchantability, fitness for a particular purpose,
-# and noninfringement. In no event shall the authors or copyright holders be liable for any claim,
-# damages, or other liability, whether in an action of contract, tort, or otherwise, arising from,
-# out of, or in connection with the software or the use or other dealings in the software.
-#
-# This script adjusts the LED color of a Shelly Plug based on the current and next hour electricity prices.
-# It uses the Nord Pool API in Home Assistant to retrieve price data and sets the color accordingly.
-#
-# 1. Shows the current price color for 5 seconds.
-# 2. Shows the next hour price color for 1 second.
-# 3. Turns off the LED for 1 second.
-# 4. Shows the next hour price color for another 1 second.
-# 5. Turns off the LED for 1 second.
-# 6. Repeats the sequence infinitely.
-#
-# This script is triggered by an automation every minute to ensure it stays in sync.
-# --------------------------------------------------------------------------------
-
+  - service: tts.google_translate_say
+    metadata: {}
+    data_template:
+      entity_id: '{{ media_player }}'
+      message: '{{ message }}'
 shelly_led_color_sequence:
-  alias: "Shelly LED Color Sequence"
-  description: "Adjust the Shelly Plug LED color based on current and next hour electricity prices."
-  fields:
-    IP_address:
-      description: "The IP address of the Shelly Plug"
-      example: "192.168.11.218"
+  alias: Shelly LED Color Sequence
   sequence:
-    - service: rest_command.shelly_rgb
-      data_template:
-        IP_address: "{{ IP_address }}"
-        status: "on"
-        color_r: >
-          {% set price = states('sensor.current_price')|float %}
-          {% set min_price = states('sensor.min_price_today')|float %}
-          {% set max_price = states('sensor.max_price_today')|float %}
-          {% if price < 0 %}
-            0
-          {% else %}
-            {{ ((price - min_price) / (max_price - min_price) * 100) | int }}
-          {% endif %}
-        color_g: >
-          {% set price = states('sensor.current_price')|float %}
-          {% set min_price = states('sensor.min_price_today')|float %}
-          {% set max_price = states('sensor.max_price_today')|float %}
-          {% if price < 0 %}
-            0
-          {% else %}
-            {{ (100 - ((price - min_price) / (max_price - min_price) * 100)) | int }}
-          {% endif %}
-        color_b: >
-          {% set price = states('sensor.current_price')|float %}
-          {% if price < 0 %}
-            {{ (-(price / 0.5) * 100) | int }}
-          {% else %}
-            0
-          {% endif %}
-        brightness: "80"
-    - delay: "00:00:05"
-    - service: rest_command.shelly_rgb
-      data_template:
-        IP_address: "{{ IP_address }}"
-        status: "on"
-        color_r: >
-          {% set next_price = states('sensor.next_hour_price')|float %}
-          {% set min_price = states('sensor.min_price_today')|float %}
-          {% set max_price = states('sensor.max_price_today')|float %}
-          {% if next_price < 0 %}
-            0
-          {% else %}
-            {{ ((next_price - min_price) / (max_price - min_price) * 100) | int }}
-          {% endif %}
-        color_g: >
-          {% set next_price = states('sensor.next_hour_price')|float %}
-          {% set min_price = states('sensor.min_price_today')|float %}
-          {% set max_price = states('sensor.max_price_today')|float %}
-          {% if next_price < 0 %}
-            0
-          {% else %}
-            {{ (100 - ((next_price - min_price) / (max_price - min_price) * 100)) | int }}
-          {% endif %}
-        color_b: >
-          {% set next_price = states('sensor.next_hour_price')|float %}
-          {% if next_price < 0 %}
-            {{ (-(next_price / 0.5) * 100) | int }}
-          {% else %}
-            0
-          {% endif %}
-        brightness: "40"
-    - delay: "00:00:01"
-    - service: rest_command.shelly_rgb
-      data:
-        IP_address: "{{ IP_address }}"
-        status: "off"
-        color_r: 0
-        color_g: 0
-        color_b: 0
-        brightness: "0"
-    - delay: "00:00:01"
-    - service: rest_command.shelly_rgb
-      data_template:
-        IP_address: "{{ IP_address }}"
-        status: "on"
-        color_r: >
-          {% set next_price = states('sensor.next_hour_price')|float %}
-          {% set min_price = states('sensor.min_price_today')|float %}
-          {% set max_price = states('sensor.max_price_today')|float %}
-          {% if next_price < 0 %}
-            0
-          {% else %}
-            {{ ((next_price - min_price) / (max_price - min_price) * 100) | int }}
-          {% endif %}
-        color_g: >
-          {% set next_price = states('sensor.next_hour_price')|float %}
-          {% set min_price = states('sensor.min_price_today')|float %}
-          {% set max_price = states('sensor.max_price_today')|float %}
-          {% if next_price < 0 %}
-            0
-          {% else %}
-            {{ (100 - ((next_price - min_price) / (max_price - min_price) * 100)) | int }}
-          {% endif %}
-        color_b: >
-          {% set next_price = states('sensor.next_hour_price')|float %}
-          {% if next_price < 0 %}
-            {{ (-(next_price / 0.5) * 100) | int }}
-          {% else %}
-            0
-          {% endif %}
-        brightness: "40"
-    - delay: "00:00:01"
-    - service: rest_command.shelly_rgb
-      data:
-        IP_address: "{{ IP_address }}"
-        status: "off"
-        color_r: 0
-        color_g: 0
-        color_b: 0
-        brightness: "0"
-    - delay: "00:00:01"
-    - service: script.turn_on
-      target:
-        entity_id: script.shelly_led_color_sequence
-      data:
-        variables:
-          IP_address: "{{ IP_address }}"
+  - service: rest_command.shelly_rgb
+    data_template:
+      IP_address: '{{ IP_address }}
+
+        '
+      color_r: "{% set price = states('sensor.current_price')|float %} {% set min_price
+        = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if price < 0 %}\n  0\n{% else %}\n  {{ ((price - min_price) / (max_price
+        - min_price) * 100) | int }}\n{% endif %}\n"
+      color_g: "{% set price = states('sensor.current_price')|float %} {% set min_price
+        = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if price < 0 %}\n  0\n{% else %}\n  {{ (100 - ((price - min_price)
+        / (max_price - min_price) * 100)) | int }}\n{% endif %}\n"
+      color_b: "{% set price = states('sensor.current_price')|float %}  {% if price
+        < 0 %}\n  100\n{% else %}\n  {{ (-(price / 0.5) * 100) | int }}\n{% endif
+        %}\n"
+  - delay: 00:00:05
+  - service: rest_command.shelly_rgb
+    data_template:
+      IP_address: '{{ IP_address }}
+
+        '
+      color_r: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ ((next_price - min_price)
+        / (max_price - min_price) * 100) | int }}\n{% endif %}\n"
+      color_g: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ (100 - ((next_price - min_price)
+        / (max_price - min_price) * 100)) | int }}\n{% endif %}\n"
+      color_b: "{% set next_price = states('sensor.next_hour_price')|float %}  {%
+        if next_price < 0 %}\n  100\n{% else %}\n  {{ (-(next_price / 0.5) * 100)
+        | int }}\n{% endif %}\n"
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data:
+      IP_address: '{{ IP_address }}
+
+        '
+      color_r: 0
+      color_g: 0
+      color_b: 0
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data_template:
+      IP_address: '{{ IP_address }}
+
+        '
+      color_r: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ ((next_price - min_price)
+        / (max_price - min_price) * 100) | int }}\n{% endif %}\n"
+      color_g: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ (100 - ((next_price - min_price)
+        / (max_price - min_price) * 100)) | int }}\n{% endif %}\n"
+      color_b: "{% set next_price = states('sensor.next_hour_price')|float %}  {%
+        if next_price < 0 %}\n  100\n{% else %}\n  {{ (-(next_price / 0.5) * 100)
+        | int }}\n{% endif %}\n"
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data:
+      IP_address: '{{ IP_address }}
+
+        '
+      color_r: 0
+      color_g: 0
+      color_b: 0
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data_template:
+      IP_address: '{{ IP_address }}
+
+        '
+      color_r: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ ((next_price - min_price)
+        / (max_price - min_price) * 100) | int }}\n{% endif %}\n"
+      color_g: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ (100 - ((next_price - min_price)
+        / (max_price - min_price) * 100)) | int }}\n{% endif %}\n"
+      color_b: "{% set next_price = states('sensor.next_hour_price')|float %}  {%
+        if next_price < 0 %}\n  100\n{% else %}\n {{ (-(next_price / 0.5) * 100) |
+        int }}\n{% endif %}\n"
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data:
+      IP_address: '{{ IP_address }}
+
+        '
+      color_r: 0
+      color_g: 0
+      color_b: 0
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data_template:
+      IP_address: '{{ IP_address }}
+
+        '
+      color_r: "{% set price = states('sensor.current_price')|float %} {% set min_price
+        = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if price < 0 %}\n  0\n{% else %}\n  {{ ((price - min_price) / (max_price
+        - min_price) * 100) | int }}\n{% endif %}\n"
+      color_g: "{% set price = states('sensor.current_price')|float %} {% set min_price
+        = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if price < 0 %}\n  0\n{% else %}\n  {{ (100 - ((price - min_price)
+        / (max_price - min_price) * 100)) | int }}\n{% endif %}\n"
+      color_b: "{% set price = states('sensor.current_price')|float %}  {% if price
+        < 0 %}\n  100\n{% else %}\n  {{ (-(price / 0.5) * 100) | int }}\n{% endif
+        %}  \n"
+  - service: script.turn_on
+    target:
+      entity_id: script.shelly_led_color_sequence
+    data:
+      variables:
+        IP_address: '{{ IP_address }}
+
+          '
+  description: Adjust the Shelly Plug LED color based on current and next hour electricity
+    prices.
+shelly_led_color_sequence_duplicate:
+  alias: Shelly LED Color Sequence (Duplicate)
+  sequence:
+  - service: rest_command.shelly_rgb
+    data_template:
+      IP_address: 192.168.1.254
+      color_r: "{% set price = states('sensor.current_price')|float %} {% set min_price
+        = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if price < 0 %}\n  0\n{% else %}\n  {{ ((price - min_price) / (max_price
+        - min_price) * 100) | int }}\n{% endif %}\n"
+      color_g: "{% set price = states('sensor.current_price')|float %} {% set min_price
+        = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if price < 0 %}\n  0\n{% else %}\n  {{ (100 - ((price - min_price)
+        / (max_price - min_price) * 100)) | int }}\n{% endif %}\n"
+      color_b: "{% set price = states('sensor.current_price')|float %}  {% if price
+        < 0 %}\n  100\n{% else %}\n  {{ (-(price / 0.5) * 100) | int }}\n{% endif
+        %}\n"
+  - delay: 00:00:05
+  - service: rest_command.shelly_rgb
+    data_template:
+      IP_address: 192.168.1.254
+      color_r: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ ((next_price - min_price)
+        / (max_price - min_price) * 100) | int }}\n{% endif %}\n"
+      color_g: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ (100 - ((next_price - min_price)
+        / (max_price - min_price) * 100)) | int }}\n{% endif %}\n"
+      color_b: "{% set next_price = states('sensor.next_hour_price')|float %}  {%
+        if next_price < 0 %}\n  100\n{% else %}\n  {{ (-(next_price / 0.5) * 100)
+        | int }}\n{% endif %}\n"
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data:
+      IP_address: 192.168.1.254
+      color_r: 0
+      color_g: 0
+      color_b: 0
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data_template:
+      IP_address: 192.168.1.254
+      color_r: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ ((next_price - min_price)
+        / (max_price - min_price) * 100) | int }}\n{% endif %}\n"
+      color_g: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ (100 - ((next_price - min_price)
+        / (max_price - min_price) * 100)) | int }}\n{% endif %}\n"
+      color_b: "{% set next_price = states('sensor.next_hour_price')|float %}  {%
+        if next_price < 0 %}\n  100\n{% else %}\n  {{ (-(next_price / 0.5) * 100)
+        | int }}\n{% endif %}\n"
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data:
+      IP_address: 192.168.1.254
+      color_r: 0
+      color_g: 0
+      color_b: 0
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data_template:
+      IP_address: 192.168.1.254
+      color_r: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ ((next_price - min_price)
+        / (max_price - min_price) * 100) | int }}\n{% endif %}\n"
+      color_g: "{% set next_price = states('sensor.next_hour_price')|float %} {% set
+        min_price = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if next_price < 0 %}\n  0\n{% else %}\n  {{ (100 - ((next_price - min_price)
+        / (max_price - min_price) * 100)) | int }}\n{% endif %}\n"
+      color_b: "{% set next_price = states('sensor.next_hour_price')|float %}  {%
+        if next_price < 0 %}\n  100\n{% else %}\n {{ (-(next_price / 0.5) * 100) |
+        int }}\n{% endif %}\n"
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data:
+      IP_address: 192.168.1.254
+      color_r: 0
+      color_g: 0
+      color_b: 0
+  - delay: 00:00:01
+  - service: rest_command.shelly_rgb
+    data_template:
+      IP_address: 192.168.1.254
+      color_r: "{% set price = states('sensor.current_price')|float %} {% set min_price
+        = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if price < 0 %}\n  0\n{% else %}\n  {{ ((price - min_price) / (max_price
+        - min_price) * 100) | int }}\n{% endif %}\n"
+      color_g: "{% set price = states('sensor.current_price')|float %} {% set min_price
+        = states('sensor.min_price_today')|float %} {% set max_price = states('sensor.max_price_today')|float
+        %}  {% if price < 0 %}\n  0\n{% else %}\n  {{ (100 - ((price - min_price)
+        / (max_price - min_price) * 100)) | int }}\n{% endif %}\n"
+      color_b: "{% set price = states('sensor.current_price')|float %}  {% if price
+        < 0 %}\n  100\n{% else %}\n  {{ (-(price / 0.5) * 100) | int }}\n{% endif
+        %}  \n"
+  - service: script.turn_on
+    target:
+      entity_id: script.shelly_led_color_sequence
+    data:
+      variables:
+        IP_address: 192.168.1.254
+  description: Adjust the Shelly Plug LED color based on current and next hour electricity
+    prices.
