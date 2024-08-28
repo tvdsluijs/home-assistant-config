@@ -19,9 +19,9 @@ condition: [] # No conditions are set for this automation
 action:
   - variables:
       formatted_message: >-
-        💡 laagste €. {{sensor.stroom_prijs_laagste_all_in}} ({{state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'min') | round(3)}}) / kWh
-        💡 hoogste €. {{sensor.stroom_prijs_hoogste_all_in}} ({{state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'max') | round(3)}}) / kWh
-        🔥 Na 06u €. {{states('sensor.huidige_gas_prijs_inkoop') | round(3)}} / m3
+        💡 laagste €. {{ states('sensor.stroom_prijs_laagste_all_in') | round(3) }} ({{ '%.3f' | format(state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'min') | float) }}) /kWh
+        💡 hoogste €. {{ states('sensor.stroom_prijs_hoogste_all_in') | round(3) }} ({{ '%.3f' | format(state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'max') | float) }}) /kWh
+        🔥 Na 06u  €. {{ states('sensor.huidige_gas_prijs_all_in') | round(3) }} ({{ '%.3f' | format(states('sensor.huidige_gas_prijs') | float) }}) /m3
       formatted_title: >-
         💶 Energie prijs {{ now().strftime("%d %b `%y") }}
   - service: notify.mobile_app_iphone_van_theo

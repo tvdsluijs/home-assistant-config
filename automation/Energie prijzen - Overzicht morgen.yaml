@@ -1,54 +1,41 @@
-### Tomorrow's Energy Prices Overview Automation
-#
-# Author: Theo van der Sluijs
-# Contact: info@itheo.tech
-#
-# Description: This automation generates a message with tomorrow's electricity purchase prices each hour between
-# 12:00 PM and 5:00 PM. It only sends the message once per day, ensuring you're informed about the next day's prices.
-
-alias: "Energie prijzen : Overzicht morgen" # Name of the automation
-description: "Deze automatisering genereert een bericht met de elektriciteitsinkoopprijzen van morgen. Het verzendt het bericht slechts één keer per dag, zodat u op de hoogte bent van de prijzen van de volgende dag"
-
-# Trigger for the automation
+alias: "Energie prijzen : Overzicht morgen 2"
+description: >-
+  Deze automatisering genereert een bericht met de elektriciteitsinkoopprijzen
+  van morgen. Het verzendt het bericht slechts één keer per dag, zodat u op de
+  hoogte bent van de prijzen van de volgende dag
 trigger:
   - platform: time_pattern
-    hours: /1 # Every hour
+    hours: /1
     minutes: "0"
     seconds: "0"
-
-# Conditions to check before executing actions
 condition:
   - condition: time
-    after: "12:00:00" # Only after 12:00 PM
-    before: "17:00:00" # And before 5:00 PM
+    after: "12:00:00"
+    before: "17:00:00"
   - condition: state
     entity_id: input_boolean.nordpool_message_sent
-    state: "off" # Ensures the message is sent only once per day
+    state: "off"
   - condition: template
-    value_template: "{{ state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'tomorrow_valid') }}" # Checks if tomorrow's data is valid
-
-# Actions to perform if the condition is met
+    value_template: "{{ state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'tomorrow_valid') }}"
 action:
   - variables:
-      # Template logic to format the message with tomorrow's prices
       formatted_message: >-
         Kaal (Inkoop) prijzen 💡 per kWh
         {% set raw_today = state_attr('sensor.nordpool_kwh_nl_eur_5_10_0', 'raw_today') %}
+
         ```
         {% for i in range(12) %}
-        € {{ '%0.3f' | format(raw_today[i].value) | replace('.', ',') }} - {{ raw_today[i].start.strftime('%H:%M') }}\t\t€ {{ '%0.3f' | format(raw_today[i+12].value) | replace('.', ',') }} - {{ raw_today[i+12].start.strftime('%H:%M') }}
+        € {{ '%0.3f' | format(raw_today[i].value) | replace('.', ',') }} - {{ raw_today[i].start.strftime('%H:%M') }}  € {{ '%0.3f' |
+        format(raw_today[i+12].value) | replace('.', ',') }} - {{ raw_today[i+12].start.strftime('%H:%M') }}
         {% endfor %}
         ```
 
         Kaal (Inkoop) prijzen 🔥 per m³
-
         ```
-        tot 06:00 € {{states('sensor.huidige_gas_prijs_inkoop') | round(3)}}
+        €. {{ states('sensor.huidige_gas_prijs_all_in') | round(3) }} ({{ '%.3f' | format(states('sensor.huidige_gas_prijs') | float) }}) /m3
         ```
-      formatted_title: >-
-        📈 Energie inkoop prijs van morgen
-  - service: notify.mobile_app_iphone_van_theo
-    data:
+      formatted_title: 📈 Energie inkoop prijs van morgen
+  - data:
       title: "{{ formatted_title }}"
       message: "{{ formatted_message }}"
       data:
@@ -56,13 +43,11 @@ action:
         clickAction: /lovelace/energie-prijzen-morgen
         push:
           sound: claire-enhanced-hier-zijn-de-stroomprijzen-van-morgen.wav
-  - service: persistent_notification.create
-    data:
+    action: notify.mobile_app_iphone_van_theo
+  - data:
       title: Stroom inkoop prijs van Morgen
       message: "{{ formatted_message }}"
-  - service: input_boolean.turn_on
-    entity_id: input_boolean.nordpool_message_sent # Marks that the message for the day has been sent
-
-mode: single # The automation runs in single mode (does not queue multiple instances)
-
-# End of configuration
+    action: persistent_notification.create
+  - entity_id: input_boolean.nordpool_message_sent
+    action: input_boolean.turn_on
+mode: single
