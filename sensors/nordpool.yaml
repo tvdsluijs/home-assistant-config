@@ -170,4 +170,19 @@
         {% set gas_price = states('sensor.huidige_gas_prijs_all_in') | float %}
         {{ (gas_consumption * gas_price) | round(2) }}
 
+- platform: template
+  sensors:
+    nordpool_yesterday:
+      value_template: >
+        {% set yesterday = (now() - timedelta(days=1)).date() %}
+        {% set sensor_history = states.sensor.nordpool_kwh_nl_eur_5_10_0 %}
+        {{ state_attr(sensor_history, 'history') | selectattr('last_updated', 'equalto', yesterday) | map(attribute='state') | first }}
+      friendly_name: "Nordpool Rate Yesterday"
+    gas_price_yesterday:
+      value_template: >
+        {% set yesterday = (now() - timedelta(days=1)).date() %}
+        {% set sensor_history = states.sensor.energyzero_gas_prijs_per_dag %}
+        {{ state_attr(sensor_history, 'history') | selectattr('last_updated', 'equalto', yesterday) | map(attribute='state') | first }}
+      friendly_name: "Gas Price Yesterday"
+
 # End of configuration
