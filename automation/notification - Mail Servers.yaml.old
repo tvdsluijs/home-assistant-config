@@ -1,0 +1,24 @@
+alias: Check All Email Servers Hourly
+actions:
+  - condition: time
+    after: "08:00:00"
+    before: "23:00:00"
+  - target:
+      entity_id:
+        - sensor.paintdecoratie_mail
+        - sensor.vanmoorsel_mail
+    action: homeassistant.update_entity
+    data: {}
+  - condition: template
+    value_template: |
+      {{ 'error' in states('sensor.paintdecoratie_mail').lower() or
+         'error' in states('sensor.vanmoorsel_mail').lower() }}
+  - data:
+      title: Email Server Error
+      message: >
+        Server 1: {{ states('sensor.paintdecoratie_mail') }} Server 2: {{
+        states('sensor.vanmoorsel_mail') }}
+    action: notify.mobile_app_iphone_van_theo
+triggers:
+  - minutes: "15"
+    trigger: time_pattern

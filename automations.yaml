@@ -34,3 +34,33 @@
   condition: []
   action: []
   mode: single
+- id: '1731835320466'
+  alias: Check All Email Servers Hourly
+  description: Check All Email Servers Hourly
+  triggers:
+  - minutes: '15'
+    trigger: time_pattern
+  actions:
+  - condition: time
+    after: 08:00:00
+    before: '23:00:00'
+  - target:
+      entity_id:
+      - sensor.paintdecoratie_mail_server
+      - sensor.vanmoorsel_mail_server
+    action: homeassistant.update_entity
+  - variables:
+      paint_status: '{{ states(''sensor.paintdecoratie_mail_server'').lower() }}'
+      vanmoorsel_status: '{{ states(''sensor.vanmoorsel_mail_server'').lower() }}'
+  - condition: template
+    value_template: '{{ ''error'' in paint_status or ''error'' in vanmoorsel_status
+      }}
+
+      '
+  - data:
+      title: Email Server Error
+      message: "{% set messages = [] %} {% if 'error' in paint_status %}\n  Paint
+        Server: {{ paint_status }}\n{% endif %} {% if 'error' in vanmoorsel_status
+        %}\n  VanMoorsel Server: {{ vanmoorsel_status }}\n{% endif %} {{ \"\\n\".join(messages)
+        }}\n"
+    action: notify.mobile_app_iphone_van_theo

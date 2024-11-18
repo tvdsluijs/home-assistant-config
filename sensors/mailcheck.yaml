@@ -1,0 +1,23 @@
+- platform: mail_server_checker
+  sensors:
+    paintdecoratie_mail:
+      friendly_name: "Paintdecoratie mail server"
+      imap_server:
+        host: mail.paintdecoratie.nl
+        port: 993
+      smtp_server:
+        host: smtp.paintdecoratie.nl
+        port: 465
+      username: test@paintdecoratie.nl
+      password: SYA5Lk6kTBRAD7Q2ZhXV
+
+    vanmoorsel_mail:
+      friendly_name: "VanMoorsel mail server"
+      imap_server:
+        host: mail.vanmoorsel.nl
+        port: 993
+      smtp_server:
+        host: smtp.vanmoorsel.nl
+        port: 465
+      username: vanmoorsel@vanmoorsel.nl
+      password: 7HNfL3vr9A3osdXeAd9wFv_h
