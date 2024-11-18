@@ -1,0 +1,9 @@
+alias: "Store Gas Price Hourly Value"
+trigger:
+  - platform: time_pattern
+    minutes: 0
+action:
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.gas_price_hourly_value
+      value: "{{ states('sensor.gas_price_hourly_value') }}"

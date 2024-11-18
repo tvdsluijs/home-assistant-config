@@ -1,0 +1,9 @@
+query_start_time:
+  name: "Query Start Time"
+  has_date: true
+  has_time: true
+
+query_end_time:
+  name: "Query End Time"
+  has_date: true
+  has_time: true

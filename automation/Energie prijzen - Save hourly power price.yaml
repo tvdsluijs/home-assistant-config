@@ -1,0 +1,10 @@
+alias: "Store Nordpool Hourly Value"
+description: "Store Nordpool Hourly Value"
+trigger:
+  - platform: time_pattern
+    minutes: 0
+action:
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.nordpool_hourly_value
+      value: "{{ states('sensor.nordpool_hourly_value') | float }}"

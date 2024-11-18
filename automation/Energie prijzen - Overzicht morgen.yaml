@@ -45,9 +45,13 @@ action:
           sound: claire-enhanced-hier-zijn-de-stroomprijzen-van-morgen.wav
     action: notify.mobile_app_iphone_van_theo
   - data:
-      title: Stroom inkoop prijs van Morgen
+      title: "{{ formatted_title }}"
       message: "{{ formatted_message }}"
     action: persistent_notification.create
+  - data:
+      title: "{{ formatted_title }}"
+      message: "{{ formatted_message }}"
+    action: notify.telegram
   - entity_id: input_boolean.nordpool_message_sent
     action: input_boolean.turn_on
 mode: single

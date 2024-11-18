@@ -3,8 +3,24 @@
 # Author: Theo van der Sluijs
 # Contact: info@itheo.tech
 #
-# Description: This configuration sets up several input_number entities to manage energy and water costs, 
+# Description: This configuration sets up several input_number entities to manage energy and water costs,
 # including VAT, energy tax, and storage for both electricity and gas, as well as for water.
+
+# hourly input for power
+nordpool_hourly_value:
+  name: "Nordpool Hourly Value"
+  min: 0
+  max: 10
+  step: 0.01
+  unit_of_measurement: "EUR/kWh"
+
+# hourly input for natural gas
+gas_price_hourly_value:
+  name: "Gas Price Hourly Value"
+  min: 0
+  max: 10
+  step: 0.01
+  unit_of_measurement: "EUR/m³"
 
 # Input Number for Water measurment
 water_start:
@@ -22,7 +38,6 @@ yesterdays_solar_production:
   max: 100000
   step: 0.001
   unit_of_measurement: "kWh"
-
 
 # Input Number for yesterdays water usage
 yesterdays_water_usage:
@@ -54,64 +69,63 @@ yesterdays_gas_usage:
 # Input Number for Electricity VAT
 stroom_btw:
   name: stroom_btw
-  initial: 1.21  # Initial value for VAT on electricity
+  initial: 1.21 # Initial value for VAT on electricity
   min: 0
   max: 100000
 
 # Input Number for Electricity Energy Tax
 stroom_energie_belasting:
   name: stroom_energie_belasting
-  initial: 0.12599  # Initial value for electricity energy tax
+  initial: 0.12599 # Initial value for electricity energy tax
   min: 0
   max: 100000
 
 # Input Number for Electricity Energy Storage
 stroom_energie_opslag:
   name: stroom_energie_opslag
-  initial: 0.04  # Initial value for electricity energy storage
+  initial: 0.04 # Initial value for electricity energy storage
   min: 0
   max: 100000
 
 # Input Number for Gas VAT
 gas_btw:
   name: gas_btw
-  initial: 1.21  # Initial value for VAT on gas
+  initial: 1.21 # Initial value for VAT on gas
   min: 0
   max: 100000
 
 # Input Number for Gas Energy Tax
 gas_energie_belasting:
   name: gas_energie_belasting
-  initial: 0.48980  # Initial value for gas energy tax
+  initial: 0.48980 # Initial value for gas energy tax
   min: 0
   max: 100000
 
 # Input Number for Gas Energy Storage
 gas_energie_opslag:
   name: gas_energie_opslag
-  initial: 0.04885  # Initial value for gas energy storage
+  initial: 0.04885 # Initial value for gas energy storage
   min: 0
   max: 100000
 
 # Input Number for Water VAT
 water_btw:
   name: water_btw
-  initial: 1.09  # Initial value for VAT on water
+  initial: 1.09 # Initial value for VAT on water
   min: 0
   max: 100000
 
 # Input Number for Water Price
 water_prijs:
   name: water_prijs
-  initial: 0.9779816514  # Initial value for water price
+  initial: 0.9779816514 # Initial value for water price
   min: 0
   max: 100000
 
 # Input Number for Water Tax
 water_belasting:
   name: water_bol
-  initial: 0.416  # Initial value for water tax
+  initial: 0.416 # Initial value for water tax
   min: 0
   max: 100000
-
 # End of configuration

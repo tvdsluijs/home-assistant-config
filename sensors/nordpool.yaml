@@ -185,4 +185,53 @@
         {{ state_attr(sensor_history, 'history') | selectattr('last_updated', 'equalto', yesterday) | map(attribute='state') | first }}
       friendly_name: "Gas Price Yesterday"
 
+# Sensor to save the current electricity price
+- platform: template
+  sensors:
+    nordpool_hourly_value:
+      friendly_name: "Nordpool Hourly Value"
+      value_template: "{{ states('sensor.nordpool_kwh_nl_eur_5_10_0') }}"
+      unit_of_measurement: "EUR/kWh"
+
+# Sensor to save the current gas price
+- platform: template
+  sensors:
+    gas_price_hourly_value:
+      friendly_name: "Gas Price Hourly Value"
+      value_template: >
+        {% set current_time = now().strftime('%Y-%m-%dT%H:00:00Z') %}
+        {% set prices = state_attr("sensor.energyzero_gas_prijs_per_dag", "Prices") %}
+        {% for item in prices %}
+          {% if item.readingDate == current_time %}
+            {{ item.price }}
+          {% endif %}
+        {% endfor %}
+      unit_of_measurement: "EUR/m³"
+
+- platform: sql
+  db_url: sqlite:///config/home-assistant_v2.db
+  queries:
+    - name: Gas Price at Dynamic Time
+      query: >
+        SELECT state
+        FROM states
+        WHERE entity_id = 'sensor.energyzero_gas_prijs_per_dag'
+        AND last_updated BETWEEN
+          '{{ states('input_datetime.query_start_time') }}' AND
+          '{{ states('input_datetime.query_end_time') }}'
+        ORDER BY last_updated DESC
+        LIMIT 1;
+      column: "state"
+
+    - name: Electricity Price at Dynamic Time
+      query: >
+        SELECT state
+        FROM states
+        WHERE entity_id = 'sensor.nordpool_kwh_nl_eur_5_10_0'
+        AND last_updated BETWEEN
+          '{{ states('input_datetime.query_start_time') }}' AND
+          '{{ states('input_datetime.query_end_time') }}'
+        ORDER BY last_updated DESC
+        LIMIT 1;
+      column: "state"
 # End of configuration
